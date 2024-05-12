@@ -1,5 +1,6 @@
-#include "chacha20.h"
-#include "simpleserial.h"
+
+#include "./targets/shiffthq/src/chacha20.h"
+#include "./lib/simpleserial.h"
 
 #include <stdint.h>
 #include <string.h>

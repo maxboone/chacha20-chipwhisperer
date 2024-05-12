@@ -1,0 +1,3 @@
+VPATH += :./lib/shiffthq/src
+EXTRAINCDIRS += ./lib/shiffthq/src
+SRC += chacha20.c

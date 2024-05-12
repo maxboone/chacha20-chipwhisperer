@@ -1,0 +1,3 @@
+EXTRAINCDIRS += ./lib/libressl/src/lib/libcrypto
+VPATH += ./lib/libressl/src/lib/libcrypto
+SRC += chacha.c

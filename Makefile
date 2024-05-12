@@ -28,18 +28,30 @@
 # To rebuild project do "make clean" then "make all".
 #----------------------------------------------------------------------------
 
-# Target file name (without extension).
-# This is the name of the compiled .hex file.
-TARGET = iacm-simpleserial-chacha20
-
-# List C source files here.
-# Header files (.h) are automatically pulled in.
-EXTRAINCDIRS += ./lib/shiffthq/src
-SRC += shiffthq.c
-
-# -----------------------------------------------------------------------------
 
 CRYPTO_TARGET = NONE
+
+ifeq ($(ALGO), shiffthq)
+	include ./lib/Makefile.shiffthq
+	TARGET = ss-chacha20-shiffthq
+	SRC += shiffthq.c
+else ifeq ($(ALGO), libressl)
+	TARGET = ss-chacha20-libressl
+	include ./lib/Makefile.libressl
+	SRC += libressl.c
+else ifeq ($(ALGO), mbedtls)
+	TARGET = ss-chacha20-mbedtls
+	include ./lib/Makefile.mbedtls
+	SRC += mbedtls.c
+else ifeq ($(ALGO), nss)
+	TARGET = ss-chacha20-nss
+	include ./lib/Makefile.nss
+	SRC += nss.c
+else
+	$(error Invalid or empty ALGO: $(ALGO). Known algos: shiffthq, libressl, mbedtls, nss)
+endif
+
+EXTRAINCDIRS += ./include
 
 #Add simpleserial project to build
 include ../simpleserial/Makefile.simpleserial

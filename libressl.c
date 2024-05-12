@@ -1,6 +1,5 @@
-
-#include "./targets/shiffthq/src/chacha20.h"
-#include "./lib/simpleserial.h"
+#include "chacha.h"
+#include "simpleserial.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -48,7 +47,7 @@ uint8_t set_nonce(uint8_t* nc, uint8_t len){
     // conversion from uint8_t to uint32_t with shifting => BE?
     // https://forum.arduino.cc/t/convert-4-uint8_t-into-one-uint32_t/577243
     //uint32_t counter = nc[12] | (nc[13] << 8) | (nc[14] << 16) | (nc[15] << 24);
-    uint32_t counter = nc[0] | (nc[1] << 8) | (nc[2] << 16) | (nc[3] << 24);
+    uint64_t counter = nc[0] | (nc[1] << 8) | (nc[2] << 16) | (nc[3] << 24);
 
     // Hello from Chipwhispererer, I'm only here to get encrypted and yo(u?)
     uint8_t input[INPUT_SIZE] = {
@@ -64,11 +63,11 @@ uint8_t set_nonce(uint8_t* nc, uint8_t len){
     };
 
     // encrypt
-    ChaCha20XOR(key, counter, nonce, input, encrypt, INPUT_SIZE);
+    CRYPTO_chacha_20(encrypt, input, INPUT_SIZE, key, nonce, counter)
 
     // put encrypted/decrypted to simple serial
     simpleserial_put('r', INPUT_SIZE, encrypt);
-    
+
     return 0;
 }
 

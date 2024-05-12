@@ -1,0 +1,4 @@
+VPATH += :./lib/mbedtls/library
+EXTRAINCDIRS += ./lib/mbedtls/include
+SRC += chacha20.c
+

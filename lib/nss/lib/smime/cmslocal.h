@@ -164,24 +164,14 @@ NSS_CMSUtil_EncryptSymKey_RSAPubKey(PLArenaPool *poolp,
 extern PK11SymKey *
 NSS_CMSUtil_DecryptSymKey_RSA(SECKEYPrivateKey *privkey, SECItem *encKey, SECOidTag bulkalgtag);
 
-/*
- * NSS_CMSUtil_DecryptSymKey_RSA_OAEP is the same as NSS_CMSUtil_DecryptSymKey_RSA, except that
- * it works with a symmetric key that was wrapped using RSA with OAEP padding rather than PKCS #1
- * Version 1.5 padding.
- */
-extern PK11SymKey *
-NSS_CMSUtil_DecryptSymKey_RSA_OAEP(SECKEYPrivateKey *privkey, SECItem *parameters, SECItem *encKey, SECOidTag bulkalgtag);
-
 extern SECStatus
-NSS_CMSUtil_EncryptSymKey_ESECDH(PLArenaPool *poolp, CERTCertificate *cert, PK11SymKey *key,
-                                 SECItem *encKey, PRBool genUkm, SECItem *ukm,
-                                 SECAlgorithmID *keyEncAlg, SECItem *originatorPubKey, void *wincx);
+NSS_CMSUtil_EncryptSymKey_ESDH(PLArenaPool *poolp, CERTCertificate *cert, PK11SymKey *key,
+                               SECItem *encKey, SECItem **ukm, SECAlgorithmID *keyEncAlg,
+                               SECItem *originatorPubKey);
 
-PK11SymKey *
-NSS_CMSUtil_DecryptSymKey_ECDH(SECKEYPrivateKey *privkey, SECItem *encKey,
-                               SECAlgorithmID *keyEncAlg, SECOidTag bulkalgtag,
-                               SECItem *ukm, NSSCMSOriginatorIdentifierOrKey *oiok,
-                               void *wincx);
+extern PK11SymKey *
+NSS_CMSUtil_DecryptSymKey_ESDH(SECKEYPrivateKey *privkey, SECItem *encKey,
+                               SECAlgorithmID *keyEncAlg, SECOidTag bulkalgtag, void *pwfn_arg);
 
 /************************************************************************
  * cmsreclist.c - recipient list stuff

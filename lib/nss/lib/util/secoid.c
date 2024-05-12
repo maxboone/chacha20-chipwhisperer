@@ -159,9 +159,6 @@ const char __nss_util_version[] = "Version: NSS " NSSUTIL_VERSION _DEBUG_STRING;
 #define ANSI_X962_SIGNATURE_OID ANSI_X962_OID, 0x04
 #define ANSI_X962_SPECIFY_OID ANSI_X962_SIGNATURE_OID, 0x03
 
-#define X9_63_SCHEME 0x2B, 0x81, 0x05, 0x10, 0x86, 0x48, 0x3F, 0x00
-#define SECG_SCHEME CERTICOM_OID, 0x01
-
 /* for Camellia: iso(1) member-body(2) jisc(392)
  *    mitsubishi(200011) isl(61) security(1) algorithm(1)
  */
@@ -605,18 +602,6 @@ CONST_OID secgECsect409r1[] = { SECG_OID, 0x25 }; /* unsupported by freebl */
 CONST_OID secgECsect571k1[] = { SECG_OID, 0x26 }; /* unsupported by freebl */
 CONST_OID secgECsect571r1[] = { SECG_OID, 0x27 }; /* unsupported by freebl */
 
-/* Diffie-Hellman key agreement algorithms */
-CONST_OID dhSinglePassstdDHsha1kdfscheme[] = { X9_63_SCHEME, 0x02 };
-CONST_OID dhSinglePassstdDHsha224kdfscheme[] = { SECG_SCHEME, 0x0B, 0x00 };
-CONST_OID dhSinglePassstdDHsha256kdfscheme[] = { SECG_SCHEME, 0x0B, 0x01 };
-CONST_OID dhSinglePassstdDHsha384kdfscheme[] = { SECG_SCHEME, 0x0B, 0x02 };
-CONST_OID dhSinglePassstdDHsha512kdfscheme[] = { SECG_SCHEME, 0x0B, 0x03 };
-CONST_OID dhSinglePasscofactorDHsha1kdfscheme[] = { X9_63_SCHEME, 0x03 };
-CONST_OID dhSinglePasscofactorDHsha224kdfscheme[] = { SECG_SCHEME, 0x0E, 0x00 };
-CONST_OID dhSinglePasscofactorDHsha256kdfscheme[] = { SECG_SCHEME, 0x0E, 0x01 };
-CONST_OID dhSinglePasscofactorDHsha384kdfscheme[] = { SECG_SCHEME, 0x0E, 0x02 };
-CONST_OID dhSinglePasscofactorDHsha512kdfscheme[] = { SECG_SCHEME, 0x0E, 0x03 };
-
 CONST_OID seed_CBC[] = { SEED_OID, 4 };
 
 CONST_OID evIncorporationLocality[] = { EV_NAME_ATTRIBUTE, 1 };
@@ -707,7 +692,7 @@ const static SECOidData oids[SEC_OID_TOTAL] = {
        "DES-EDE", CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
     OD(isoSHAWithRSASignature, SEC_OID_ISO_SHA_WITH_RSA_SIGNATURE,
        "ISO SHA with RSA Signature",
-       CKM_SHA1_RSA_PKCS, INVALID_CERT_EXTENSION),
+       CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
     OD(pkcs1RSAEncryption, SEC_OID_PKCS1_RSA_ENCRYPTION,
        "PKCS #1 RSA Encryption", CKM_RSA_PKCS, INVALID_CERT_EXTENSION),
 
@@ -1591,19 +1576,19 @@ const static SECOidData oids[SEC_OID_TOTAL] = {
        INVALID_CERT_EXTENSION),
     OD(ansix962SignaturewithSHA224Digest,
        SEC_OID_ANSIX962_ECDSA_SHA224_SIGNATURE,
-       "X9.62 ECDSA signature with SHA224", CKM_ECDSA_SHA224,
+       "X9.62 ECDSA signature with SHA224", CKM_INVALID_MECHANISM,
        INVALID_CERT_EXTENSION),
     OD(ansix962SignaturewithSHA256Digest,
        SEC_OID_ANSIX962_ECDSA_SHA256_SIGNATURE,
-       "X9.62 ECDSA signature with SHA256", CKM_ECDSA_SHA256,
+       "X9.62 ECDSA signature with SHA256", CKM_INVALID_MECHANISM,
        INVALID_CERT_EXTENSION),
     OD(ansix962SignaturewithSHA384Digest,
        SEC_OID_ANSIX962_ECDSA_SHA384_SIGNATURE,
-       "X9.62 ECDSA signature with SHA384", CKM_ECDSA_SHA384,
+       "X9.62 ECDSA signature with SHA384", CKM_INVALID_MECHANISM,
        INVALID_CERT_EXTENSION),
     OD(ansix962SignaturewithSHA512Digest,
        SEC_OID_ANSIX962_ECDSA_SHA512_SIGNATURE,
-       "X9.62 ECDSA signature with SHA512", CKM_ECDSA_SHA512,
+       "X9.62 ECDSA signature with SHA512", CKM_INVALID_MECHANISM,
        INVALID_CERT_EXTENSION),
 
     /* More id-ce and id-pe OIDs from RFC 3280 */
@@ -1668,7 +1653,7 @@ const static SECOidData oids[SEC_OID_TOTAL] = {
 
     OD(isoSHA1WithRSASignature, SEC_OID_ISO_SHA1_WITH_RSA_SIGNATURE,
        "ISO SHA-1 with RSA Signature",
-       CKM_SHA1_RSA_PKCS, INVALID_CERT_EXTENSION),
+       CKM_INVALID_MECHANISM, INVALID_CERT_EXTENSION),
 
     /* SEED algorithm OIDs */
     OD(seed_CBC, SEC_OID_SEED_CBC,
@@ -1716,11 +1701,11 @@ const static SECOidData oids[SEC_OID_TOTAL] = {
     OD(nistDSASignaturewithSHA224Digest,
        SEC_OID_NIST_DSA_SIGNATURE_WITH_SHA224_DIGEST,
        "DSA with SHA-224 Signature",
-       CKM_DSA_SHA224, INVALID_CERT_EXTENSION),
+       CKM_INVALID_MECHANISM /* not yet defined */, INVALID_CERT_EXTENSION),
     OD(nistDSASignaturewithSHA256Digest,
        SEC_OID_NIST_DSA_SIGNATURE_WITH_SHA256_DIGEST,
        "DSA with SHA-256 Signature",
-       CKM_DSA_SHA256, INVALID_CERT_EXTENSION),
+       CKM_INVALID_MECHANISM /* not yet defined */, INVALID_CERT_EXTENSION),
     OD(msExtendedKeyUsageTrustListSigning,
        SEC_OID_MS_EXT_KEY_USAGE_CTL_SIGNING,
        "Microsoft Trust List Signing",
@@ -1857,36 +1842,6 @@ const static SECOidData oids[SEC_OID_TOTAL] = {
     OD(ed25519PublicKey, SEC_OID_ED25519_PUBLIC_KEY,
        "X9.62 elliptic edwards curve public key", CKM_EC_EDWARDS_KEY_PAIR_GEN, INVALID_CERT_EXTENSION),
 
-    OD(dhSinglePassstdDHsha1kdfscheme, SEC_OID_DHSINGLEPASS_STDDH_SHA1KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Standard with SHA1 KDF", CKM_ECDH1_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePassstdDHsha224kdfscheme, SEC_OID_DHSINGLEPASS_STDDH_SHA224KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Standard with SHA224 KDF", CKM_ECDH1_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePassstdDHsha256kdfscheme, SEC_OID_DHSINGLEPASS_STDDH_SHA256KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Standard with SHA256 KDF", CKM_ECDH1_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePassstdDHsha384kdfscheme, SEC_OID_DHSINGLEPASS_STDDH_SHA384KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Standard with SHA384 KDF", CKM_ECDH1_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePassstdDHsha512kdfscheme, SEC_OID_DHSINGLEPASS_STDDH_SHA512KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Standard with SHA512 KDF", CKM_ECDH1_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePasscofactorDHsha1kdfscheme, SEC_OID_DHSINGLEPASS_COFACTORDH_SHA1KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Cofactor with SHA1 KDF", CKM_ECDH1_COFACTOR_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePasscofactorDHsha224kdfscheme, SEC_OID_DHSINGLEPASS_COFACTORDH_SHA224KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Cofactor with SHA224 KDF", CKM_ECDH1_COFACTOR_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePasscofactorDHsha256kdfscheme, SEC_OID_DHSINGLEPASS_COFACTORDH_SHA256KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Cofactor with SHA256 KDF", CKM_ECDH1_COFACTOR_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePasscofactorDHsha384kdfscheme, SEC_OID_DHSINGLEPASS_COFACTORDH_SHA384KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Cofactor with SHA384 KDF", CKM_ECDH1_COFACTOR_DERIVE,
-       INVALID_CERT_EXTENSION),
-    OD(dhSinglePasscofactorDHsha512kdfscheme, SEC_OID_DHSINGLEPASS_COFACTORDH_SHA512KDF_SCHEME,
-       "Eliptic Curve Diffie-Hellman Single Pass Cofactor with SHA512 KDF", CKM_ECDH1_COFACTOR_DERIVE,
-       INVALID_CERT_EXTENSION),
 };
 
 /* PRIVATE EXTENDED SECOID Table

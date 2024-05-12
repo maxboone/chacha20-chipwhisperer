@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifdef FREEBL_NO_DEPEND
-#include "stubs.h"
-#endif
+//#ifdef FREEBL_NO_DEPEND
+//#include "stubs.h"
+//#endif
 
 #include <string.h>
 #include <stdio.h>

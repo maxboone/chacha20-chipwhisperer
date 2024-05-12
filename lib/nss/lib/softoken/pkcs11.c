@@ -1088,7 +1088,7 @@ sftk_handlePublicKeyObject(SFTKSession *session, SFTKObject *object,
             }
             /* for ECDSA and EDDSA. Change if the structure of any of them is modified. */
             derive = (key_type == CKK_EC_EDWARDS) ? CK_FALSE : CK_TRUE; /* CK_TRUE for ECDH */
-            verify = CK_TRUE;                                           /* for ECDSA and EDDSA */
+            verify = CK_TRUE;                                           /* for ECDSA */
             encrypt = CK_FALSE;
             recover = CK_FALSE;
             wrap = CK_FALSE;
@@ -1285,10 +1285,8 @@ sftk_handlePrivateKeyObject(SFTKSession *session, SFTKObject *object, CK_KEY_TYP
             if (!sftk_hasAttribute(object, CKA_VALUE)) {
                 return CKR_TEMPLATE_INCOMPLETE;
             }
-            /* for ECDSA and EDDSA. Change if the structure of any of them is modified. */
-            derive = (key_type == CKK_EC_EDWARDS) ? CK_FALSE : CK_TRUE; /* CK_TRUE for ECDH */
-            sign = CK_TRUE;                                             /* for ECDSA and EDDSA */
             encrypt = CK_FALSE;
+            sign = CK_TRUE;
             recover = CK_FALSE;
             wrap = CK_FALSE;
             break;
@@ -4805,14 +4803,8 @@ NSC_CreateObject(CK_SESSION_HANDLE hSession,
     if (object == NULL) {
         return CKR_HOST_MEMORY;
     }
-
-    /*
-     * sftk_NewObject will set object->isFIPS to PR_TRUE if the slot is FIPS.
-     * We don't need to worry about that here, as FC_CreateObject will always
-     * disallow the import of secret and private keys, regardless of isFIPS
-     * approval status. Therefore, at this point we know that the key is a
-     * public key, which is acceptable to be imported in plaintext.
-     */
+    object->isFIPS = PR_FALSE; /* if we created the object on the fly,
+                                * it's not a FIPS object */
 
     /*
      * load the template values into the object

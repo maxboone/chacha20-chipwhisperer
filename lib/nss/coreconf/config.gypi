@@ -136,7 +136,6 @@
     'nss_include_dir%': '/usr/include/nss',
     'only_dev_random%': 1,
     'disable_fips%': 1,
-    'fips_module_id%': '',
     'mozpkix_only%': 0,
     'mozilla_central%': 0,
     'coverage%': 0,
@@ -166,20 +165,10 @@
           '<(nss_include_dir)',
         ],
       }],
-      [ 'disable_fips==0', {
-        'defines': [
-          'NSS_ENABLE_FIPS_INDICATORS',
-        ],
-      }],
       [ 'disable_fips==1', {
         'defines': [
           'NSS_FIPS_DISABLED',
           'NSS_NO_INIT_SUPPORT',
-        ],
-      }],
-      [ 'fips_module_id!=""', {
-        'defines': [
-          'NSS_FIPS_MODULE_ID="<(fips_module_id)"'
         ],
       }],
       [ 'OS!="android" and OS!="mac" and OS!="ios" and OS!="win"', {

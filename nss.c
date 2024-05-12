@@ -1,6 +1,6 @@
 
-#include "./targets/shiffthq/src/chacha20.h"
-#include "./lib/simpleserial.h"
+#include "chacha20poly1305.h"
+#include "simpleserial.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -63,8 +63,7 @@ uint8_t set_nonce(uint8_t* nc, uint8_t len){
             //0x75, 0x3f
     };
 
-    // encrypt
-    ChaCha20XOR(key, counter, nonce, input, encrypt, INPUT_SIZE);
+    ChaCha20_Xor(encrypt, input, INPUT_SIZE, key, nonce, counter);
 
     // put encrypted/decrypted to simple serial
     simpleserial_put('r', INPUT_SIZE, encrypt);

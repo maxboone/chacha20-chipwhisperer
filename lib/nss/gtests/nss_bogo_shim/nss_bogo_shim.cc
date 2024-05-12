@@ -657,8 +657,8 @@ class TestAgent {
       return SECFailure;
     }
 
-    if (output == NULL || output->data == NULL ||
-        output->len != input->len + 2) {
+    SECITEM_AllocItem(NULL, output, input->len + 2);
+    if (output == NULL || output->data == NULL) {
       return SECFailure;
     }
 
@@ -718,8 +718,9 @@ class TestAgent {
       return SECFailure;
     }
 
-    if (output == NULL || output->data == NULL ||
-        output->len != input->len - 4) {
+    SECITEM_AllocItem(NULL, output, input->len - 4);
+
+    if (output == NULL || output->data == NULL) {
       return SECFailure;
     }
 
@@ -784,9 +785,9 @@ class TestAgent {
       std::cerr << "Certificate is too short. " << std::endl;
       return SECFailure;
     }
+    SECITEM_AllocItem(NULL, output, input->len - 1);
 
-    if (output == NULL || output->data == NULL ||
-        output->len != input->len - 1) {
+    if (output == NULL || output->data == NULL) {
       return SECFailure;
     }
 

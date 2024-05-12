@@ -1,0 +1,2 @@
+SS_VER = SS_VER_1_1
+

@@ -1,0 +1,355 @@
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"shiffthq.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "shiffthq.c"
+  18              		.section	.rodata.str1.1,"aMS",%progbits,1
+  19              	.LC2:
+  20 0000 48656C6C 		.ascii	"Hello from Chipwhispererer, Im only here to get enc"
+  20      6F206672 
+  20      6F6D2043 
+  20      68697077 
+  20      68697370 
+  21 0033 72797074 		.ascii	"rypted and yo\000"
+  21      65642061 
+  21      6E642079 
+  21      6F00
+  22              		.section	.text.set_nonce,"ax",%progbits
+  23              		.align	1
+  24              		.global	set_nonce
+  25              		.syntax unified
+  26              		.code	16
+  27              		.thumb_func
+  29              	set_nonce:
+  30              	.LVL0:
+  31              	.LFB3:
+   1:shiffthq.c    **** #include "chacha20.h"
+   2:shiffthq.c    **** #include "simpleserial.h"
+   3:shiffthq.c    **** 
+   4:shiffthq.c    **** #include <stdint.h>
+   5:shiffthq.c    **** #include <string.h>
+   6:shiffthq.c    **** #include <stdio.h>
+   7:shiffthq.c    **** 
+   8:shiffthq.c    **** // check size of input bytes!
+   9:shiffthq.c    **** #define INPUT_SIZE 64
+  10:shiffthq.c    **** #define KEY_SIZE 32
+  11:shiffthq.c    **** #define NONCE_SIZE 12
+  12:shiffthq.c    **** #define COUNT_SIZE 4
+  13:shiffthq.c    **** 
+  14:shiffthq.c    **** uint8_t set_nonce(uint8_t* nc, uint8_t len){
+  32              		.loc 1 14 44 view -0
+  33              		.cfi_startproc
+  34              		@ args = 0, pretend = 0, frame = 176
+  35              		@ frame_needed = 0, uses_anonymous_args = 0
+  15:shiffthq.c    ****     if (len != NONCE_SIZE+COUNT_SIZE) return 1;
+  36              		.loc 1 15 5 view .LVU1
+  14:shiffthq.c    ****     if (len != NONCE_SIZE+COUNT_SIZE) return 1;
+  37              		.loc 1 14 44 is_stmt 0 view .LVU2
+  38 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  39              	.LCFI0:
+  40              		.cfi_def_cfa_offset 20
+  41              		.cfi_offset 4, -20
+  42              		.cfi_offset 5, -16
+  43              		.cfi_offset 6, -12
+  44              		.cfi_offset 7, -8
+  45              		.cfi_offset 14, -4
+  46 0002 0400     		movs	r4, r0
+  47 0004 AFB0     		sub	sp, sp, #188
+  48              	.LCFI1:
+  49              		.cfi_def_cfa_offset 208
+  50              		.loc 1 15 46 view .LVU3
+  51 0006 0120     		movs	r0, #1
+  52              	.LVL1:
+  53              		.loc 1 15 8 view .LVU4
+  54 0008 1029     		cmp	r1, #16
+  55 000a 3CD1     		bne	.L2
+  56              	.LVL2:
+  57              	.LBB4:
+  58              	.LBI4:
+  14:shiffthq.c    ****     if (len != NONCE_SIZE+COUNT_SIZE) return 1;
+  59              		.loc 1 14 9 is_stmt 1 view .LVU5
+  60              	.LBB5:
+  16:shiffthq.c    ****     uint8_t encrypt[INPUT_SIZE];
+  61              		.loc 1 16 5 view .LVU6
+  17:shiffthq.c    ****     uint8_t key[KEY_SIZE] = {
+  62              		.loc 1 17 5 view .LVU7
+  18:shiffthq.c    ****             0x00, 0x01, 0x02, 0x03,
+  19:shiffthq.c    ****             0x04, 0x05, 0x06, 0x07,
+  20:shiffthq.c    ****             0x08, 0x09, 0x0a, 0x0b,
+  21:shiffthq.c    ****             0x0c, 0x0d, 0x0e, 0x0f,
+  22:shiffthq.c    ****             0x10, 0x11, 0x12, 0x13,
+  23:shiffthq.c    ****             0x14, 0x15, 0x16, 0x17,
+  24:shiffthq.c    ****             0x18, 0x19, 0x1a, 0x1b,
+  25:shiffthq.c    ****             0x1c, 0x1d, 0x1e, 0x1f
+  26:shiffthq.c    ****     }; // key size 256 bit (32 bytes)
+  27:shiffthq.c    **** 
+  28:shiffthq.c    ****     // 12 bytes initial vector => 96 bit (in original 64 bit, but see: https://datatracker.ietf.org
+  29:shiffthq.c    ****     // => to be set in the attack scenario
+  30:shiffthq.c    ****     /*uint8_t nonce[NONCE_SIZE] = {
+  31:shiffthq.c    ****             nc[0], nc[1], nc[2], nc[3],
+  32:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
+  33:shiffthq.c    ****             nc[8], nc[9], nc[10], nc[11]
+  34:shiffthq.c    ****     };*/
+  35:shiffthq.c    ****     uint8_t nonce[NONCE_SIZE] = {
+  36:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
+  37:shiffthq.c    ****             nc[8], nc[9], nc[10], nc[11],
+  38:shiffthq.c    ****             nc[12], nc[13], nc[14], nc[15]
+  39:shiffthq.c    ****     };
+  40:shiffthq.c    **** 
+  41:shiffthq.c    ****     // 4 bytes counter
+  42:shiffthq.c    ****     // use function to get uint32_t LE counter
+  43:shiffthq.c    ****     /*uint8_t count_arr[COUNT_SIZE] = {
+  44:shiffthq.c    ****             nc[12], nc[13], nc[14], nc[15]
+  45:shiffthq.c    ****     };
+  46:shiffthq.c    ****     uint32_t counter = u8t32le(count_arr); */
+  47:shiffthq.c    ****     // conversion from uint8_t to uint32_t with shifting => BE?
+  48:shiffthq.c    ****     // https://forum.arduino.cc/t/convert-4-uint8_t-into-one-uint32_t/577243
+  49:shiffthq.c    ****     //uint32_t counter = nc[12] | (nc[13] << 8) | (nc[14] << 16) | (nc[15] << 24);
+  50:shiffthq.c    ****     uint32_t counter = nc[0] | (nc[1] << 8) | (nc[2] << 16) | (nc[3] << 24);
+  51:shiffthq.c    **** 
+  52:shiffthq.c    ****     // Hello from Chipwhispererer, I'm only here to get encrypted and yo(u?)
+  53:shiffthq.c    ****     uint8_t input[INPUT_SIZE] = {
+  63              		.loc 1 53 13 is_stmt 0 view .LVU8
+  64 000c 4026     		movs	r6, #64
+  17:shiffthq.c    ****     uint8_t key[KEY_SIZE] = {
+  65              		.loc 1 17 13 view .LVU9
+  66 000e 2022     		movs	r2, #32
+  67 0010 1E49     		ldr	r1, .L4
+  68              	.LVL3:
+  17:shiffthq.c    ****     uint8_t key[KEY_SIZE] = {
+  69              		.loc 1 17 13 view .LVU10
+  70 0012 06A8     		add	r0, sp, #24
+  71 0014 FFF7FEFF 		bl	memcpy
+  72              	.LVL4:
+  35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
+  73              		.loc 1 35 5 is_stmt 1 view .LVU11
+  35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
+  74              		.loc 1 35 13 is_stmt 0 view .LVU12
+  75 0018 2379     		ldrb	r3, [r4, #4]
+  76 001a 03AD     		add	r5, sp, #12
+  77 001c 2B70     		strb	r3, [r5]
+  78 001e 6379     		ldrb	r3, [r4, #5]
+  79 0020 6278     		ldrb	r2, [r4, #1]
+  80 0022 6B70     		strb	r3, [r5, #1]
+  81 0024 A379     		ldrb	r3, [r4, #6]
+  82 0026 1202     		lsls	r2, r2, #8
+  83 0028 AB70     		strb	r3, [r5, #2]
+  84 002a E379     		ldrb	r3, [r4, #7]
+  85              		.loc 1 53 13 view .LVU13
+  86 002c 1849     		ldr	r1, .L4+4
+  35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
+  87              		.loc 1 35 13 view .LVU14
+  88 002e EB70     		strb	r3, [r5, #3]
+  89 0030 237A     		ldrb	r3, [r4, #8]
+  54:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
+  55:shiffthq.c    ****             0x6f, 0x6d, 0x20, 0x43, 0x68, 0x69, 0x70, 0x77,
+  56:shiffthq.c    ****             0x68, 0x69, 0x73, 0x70, 0x65, 0x72, 0x65, 0x72,
+  57:shiffthq.c    ****             0x65, 0x72, 0x2c, 0x20, 0x49, 0x6d, 0x20, 0x6f,
+  58:shiffthq.c    ****             0x6e, 0x6c, 0x79, 0x20, 0x68, 0x65, 0x72, 0x65,
+  59:shiffthq.c    ****             0x20, 0x74, 0x6f, 0x20, 0x67, 0x65, 0x74, 0x20,
+  60:shiffthq.c    ****             0x65, 0x6e, 0x63, 0x72, 0x79, 0x70, 0x74, 0x65,
+  61:shiffthq.c    ****             0x64, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x79, 0x6f,
+  62:shiffthq.c    ****             //0x75, 0x3f
+  63:shiffthq.c    ****     };
+  64:shiffthq.c    **** 
+  65:shiffthq.c    ****     // encrypt
+  66:shiffthq.c    ****     ChaCha20XOR(key, counter, nonce, input, encrypt, INPUT_SIZE);
+  90              		.loc 1 66 5 view .LVU15
+  91 0032 0EAF     		add	r7, sp, #56
+  35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
+  92              		.loc 1 35 13 view .LVU16
+  93 0034 2B71     		strb	r3, [r5, #4]
+  94 0036 637A     		ldrb	r3, [r4, #9]
+  53:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
+  95              		.loc 1 53 13 view .LVU17
+  96 0038 1EA8     		add	r0, sp, #120
+  35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
+  97              		.loc 1 35 13 view .LVU18
+  98 003a 6B71     		strb	r3, [r5, #5]
+  99 003c A37A     		ldrb	r3, [r4, #10]
+ 100 003e AB71     		strb	r3, [r5, #6]
+ 101 0040 E37A     		ldrb	r3, [r4, #11]
+ 102 0042 EB71     		strb	r3, [r5, #7]
+ 103 0044 237B     		ldrb	r3, [r4, #12]
+ 104 0046 2B72     		strb	r3, [r5, #8]
+ 105 0048 637B     		ldrb	r3, [r4, #13]
+ 106 004a 6B72     		strb	r3, [r5, #9]
+ 107 004c A37B     		ldrb	r3, [r4, #14]
+ 108 004e AB72     		strb	r3, [r5, #10]
+ 109 0050 E37B     		ldrb	r3, [r4, #15]
+ 110 0052 EB72     		strb	r3, [r5, #11]
+  50:shiffthq.c    **** 
+ 111              		.loc 1 50 5 is_stmt 1 view .LVU19
+ 112 0054 2378     		ldrb	r3, [r4]
+ 113 0056 1A43     		orrs	r2, r3
+ 114 0058 A378     		ldrb	r3, [r4, #2]
+ 115 005a E478     		ldrb	r4, [r4, #3]
+ 116              	.LVL5:
+  50:shiffthq.c    **** 
+ 117              		.loc 1 50 5 is_stmt 0 view .LVU20
+ 118 005c 1B04     		lsls	r3, r3, #16
+ 119 005e 1343     		orrs	r3, r2
+ 120 0060 2406     		lsls	r4, r4, #24
+ 121 0062 1C43     		orrs	r4, r3
+ 122              	.LVL6:
+  53:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
+ 123              		.loc 1 53 5 is_stmt 1 view .LVU21
+  53:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
+ 124              		.loc 1 53 13 is_stmt 0 view .LVU22
+ 125 0064 3200     		movs	r2, r6
+ 126 0066 FFF7FEFF 		bl	memcpy
+ 127              	.LVL7:
+ 128              		.loc 1 66 5 is_stmt 1 view .LVU23
+ 129 006a 2A00     		movs	r2, r5
+ 130 006c 2100     		movs	r1, r4
+ 131 006e 1EAB     		add	r3, sp, #120
+ 132 0070 06A8     		add	r0, sp, #24
+ 133 0072 0196     		str	r6, [sp, #4]
+ 134 0074 0097     		str	r7, [sp]
+ 135 0076 FFF7FEFF 		bl	ChaCha20XOR
+ 136              	.LVL8:
+  67:shiffthq.c    **** 
+  68:shiffthq.c    ****     // put encrypted/decrypted to simple serial
+  69:shiffthq.c    ****     simpleserial_put('r', INPUT_SIZE, encrypt);
+ 137              		.loc 1 69 5 view .LVU24
+ 138 007a 7220     		movs	r0, #114
+ 139 007c 3A00     		movs	r2, r7
+ 140 007e 3100     		movs	r1, r6
+ 141 0080 FFF7FEFF 		bl	simpleserial_put
+ 142              	.LVL9:
+  70:shiffthq.c    ****     
+  71:shiffthq.c    ****     return 0;
+ 143              		.loc 1 71 5 view .LVU25
+ 144              		.loc 1 71 5 is_stmt 0 view .LVU26
+ 145 0084 0020     		movs	r0, #0
+ 146              	.L2:
+ 147              	.LBE5:
+ 148              	.LBE4:
+  72:shiffthq.c    **** }
+ 149              		.loc 1 72 1 view .LVU27
+ 150 0086 2FB0     		add	sp, sp, #188
+ 151              		@ sp needed
+ 152 0088 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 153              	.L5:
+ 154 008a C046     		.align	2
+ 155              	.L4:
+ 156 008c 00000000 		.word	.LANCHOR0
+ 157 0090 00000000 		.word	.LC2
+ 158              		.cfi_endproc
+ 159              	.LFE3:
+ 161              		.section	.text.startup.main,"ax",%progbits
+ 162              		.align	1
+ 163              		.global	main
+ 164              		.syntax unified
+ 165              		.code	16
+ 166              		.thumb_func
+ 168              	main:
+ 169              	.LFB4:
+  73:shiffthq.c    **** 
+  74:shiffthq.c    **** 
+  75:shiffthq.c    **** int main(void) {
+ 170              		.loc 1 75 16 is_stmt 1 view -0
+ 171              		.cfi_startproc
+ 172              		@ Volatile: function does not return.
+ 173              		@ args = 0, pretend = 0, frame = 0
+ 174              		@ frame_needed = 0, uses_anonymous_args = 0
+  76:shiffthq.c    ****     platform_init();
+ 175              		.loc 1 76 5 view .LVU29
+  75:shiffthq.c    ****     platform_init();
+ 176              		.loc 1 75 16 is_stmt 0 view .LVU30
+ 177 0000 10B5     		push	{r4, lr}
+ 178              	.LCFI2:
+ 179              		.cfi_def_cfa_offset 8
+ 180              		.cfi_offset 4, -8
+ 181              		.cfi_offset 14, -4
+ 182              		.loc 1 76 5 view .LVU31
+ 183 0002 FFF7FEFF 		bl	platform_init
+ 184              	.LVL10:
+  77:shiffthq.c    ****     init_uart();
+ 185              		.loc 1 77 5 is_stmt 1 view .LVU32
+ 186 0006 FFF7FEFF 		bl	init_uart
+ 187              	.LVL11:
+  78:shiffthq.c    ****     trigger_setup();
+ 188              		.loc 1 78 5 view .LVU33
+ 189 000a FFF7FEFF 		bl	trigger_setup
+ 190              	.LVL12:
+  79:shiffthq.c    **** 
+  80:shiffthq.c    ****     simpleserial_init();
+ 191              		.loc 1 80 5 view .LVU34
+ 192 000e FFF7FEFF 		bl	simpleserial_init
+ 193              	.LVL13:
+  81:shiffthq.c    ****     // 12 Bytes for nonce, 4 Bytes for counter
+  82:shiffthq.c    ****     simpleserial_addcmd('p', 16, set_nonce);
+ 194              		.loc 1 82 5 view .LVU35
+ 195 0012 1021     		movs	r1, #16
+ 196 0014 7020     		movs	r0, #112
+ 197 0016 034A     		ldr	r2, .L8
+ 198 0018 FFF7FEFF 		bl	simpleserial_addcmd
+ 199              	.LVL14:
+ 200              	.L7:
+  83:shiffthq.c    **** 
+  84:shiffthq.c    ****     while(1)
+ 201              		.loc 1 84 5 discriminator 1 view .LVU36
+  85:shiffthq.c    ****         simpleserial_get();
+ 202              		.loc 1 85 9 discriminator 1 view .LVU37
+ 203 001c FFF7FEFF 		bl	simpleserial_get
+ 204              	.LVL15:
+  84:shiffthq.c    ****         simpleserial_get();
+ 205              		.loc 1 84 10 discriminator 1 view .LVU38
+ 206 0020 FCE7     		b	.L7
+ 207              	.L9:
+ 208 0022 C046     		.align	2
+ 209              	.L8:
+ 210 0024 00000000 		.word	set_nonce
+ 211              		.cfi_endproc
+ 212              	.LFE4:
+ 214              		.section	.rodata
+ 215              		.set	.LANCHOR0,. + 0
+ 216              	.LC0:
+ 217 0000 00010203 		.ascii	"\000\001\002\003\004\005\006\007\010\011\012\013\014"
+ 217      04050607 
+ 217      08090A0B 
+ 217      0C
+ 218 000d 0D0E0F10 		.ascii	"\015\016\017\020\021\022\023\024\025\026\027\030\031"
+ 218      11121314 
+ 218      15161718 
+ 218      19
+ 219 001a 1A1B1C1D 		.ascii	"\032\033\034\035\036\037"
+ 219      1E1F
+ 220              		.text
+ 221              	.Letext0:
+ 222              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 223              		.file 3 ".././simpleserial/simpleserial.h"
+ 224              		.file 4 "./lib/shiffthq/src/chacha20.h"
+ 225              		.file 5 "<built-in>"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 shiffthq.c
+     /tmp/ccOjJcOE.s:23     .text.set_nonce:0000000000000000 $t
+     /tmp/ccOjJcOE.s:29     .text.set_nonce:0000000000000000 set_nonce
+     /tmp/ccOjJcOE.s:156    .text.set_nonce:000000000000008c $d
+     /tmp/ccOjJcOE.s:162    .text.startup.main:0000000000000000 $t
+     /tmp/ccOjJcOE.s:168    .text.startup.main:0000000000000000 main
+     /tmp/ccOjJcOE.s:210    .text.startup.main:0000000000000024 $d
+
+UNDEFINED SYMBOLS
+memcpy
+ChaCha20XOR
+simpleserial_put
+platform_init
+init_uart
+trigger_setup
+simpleserial_init
+simpleserial_addcmd
+simpleserial_get

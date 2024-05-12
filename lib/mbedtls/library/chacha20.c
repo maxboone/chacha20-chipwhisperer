@@ -22,6 +22,11 @@
 
 #include "mbedtls/platform.h"
 
+/* Implementation that should never be optimized out by the compiler */
+void mbedtls_platform_zeroize( void *v, size_t n ) {
+    volatile unsigned char *p = (unsigned char*)v; while( n-- ) *p++ = 0;
+}
+
 #if !defined(MBEDTLS_CHACHA20_ALT)
 
 #define ROTL32(value, amount) \

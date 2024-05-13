@@ -63,8 +63,10 @@ uint8_t set_nonce(uint8_t* nc, uint8_t len){
     };
 
     // encrypt
+    trigger_high();
     ChaCha20XOR(key, counter, nonce, input, encrypt, INPUT_SIZE);
-
+    trigger_low();
+    
     // put encrypted/decrypted to simple serial
     simpleserial_put('r', INPUT_SIZE, encrypt);
     

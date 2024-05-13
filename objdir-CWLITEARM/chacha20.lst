@@ -765,10 +765,10 @@
  540              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 chacha20.c
-     /tmp/ccCxKaui.s:16     .text.chacha20_quarterround:0000000000000000 $t
-     /tmp/ccCxKaui.s:23     .text.chacha20_quarterround:0000000000000000 chacha20_quarterround
-     /tmp/ccCxKaui.s:164    .text.ChaCha20XOR:0000000000000000 $t
-     /tmp/ccCxKaui.s:171    .text.ChaCha20XOR:0000000000000000 ChaCha20XOR
-     /tmp/ccCxKaui.s:532    .text.ChaCha20XOR:000000000000016c $d
+     /tmp/ccEX3GSS.s:16     .text.chacha20_quarterround:0000000000000000 $t
+     /tmp/ccEX3GSS.s:23     .text.chacha20_quarterround:0000000000000000 chacha20_quarterround
+     /tmp/ccEX3GSS.s:164    .text.ChaCha20XOR:0000000000000000 $t
+     /tmp/ccEX3GSS.s:171    .text.ChaCha20XOR:0000000000000000 ChaCha20XOR
+     /tmp/ccEX3GSS.s:532    .text.ChaCha20XOR:000000000000016c $d
 
 NO UNDEFINED SYMBOLS

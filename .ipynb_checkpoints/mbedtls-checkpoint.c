@@ -63,7 +63,9 @@ uint8_t set_nonce(uint8_t* nc, uint8_t len){
     };
 
     // MBEDTLS
+    trigger_high();
     mbedtls_chacha20_crypt(key, nonce, counter, INPUT_SIZE, input, encrypt);    // encrypt
+    trigger_low();
 
     // put encrypted/decrypted to simple serial
     simpleserial_put('r', INPUT_SIZE, encrypt);

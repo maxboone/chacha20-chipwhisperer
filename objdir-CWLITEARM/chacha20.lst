@@ -1,0 +1,774 @@
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 4
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"chacha20.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.chacha20_quarterround,"ax",%progbits
+  16              		.align	1
+  17              		.arch armv7e-m
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	chacha20_quarterround:
+  24              	.LVL0:
+  25              	.LFB3:
+  26              		.file 1 "./lib/shiffthq/src/chacha20.c"
+   1:./lib/shiffthq/src/chacha20.c **** #include <stdint.h>
+   2:./lib/shiffthq/src/chacha20.c **** #include <string.h>
+   3:./lib/shiffthq/src/chacha20.c **** #include "chacha20.h"
+   4:./lib/shiffthq/src/chacha20.c **** 
+   5:./lib/shiffthq/src/chacha20.c **** static inline void u32t8le(uint32_t v, uint8_t p[4]) {
+   6:./lib/shiffthq/src/chacha20.c ****     p[0] = v & 0xff;
+   7:./lib/shiffthq/src/chacha20.c ****     p[1] = (v >> 8) & 0xff;
+   8:./lib/shiffthq/src/chacha20.c ****     p[2] = (v >> 16) & 0xff;
+   9:./lib/shiffthq/src/chacha20.c ****     p[3] = (v >> 24) & 0xff;
+  10:./lib/shiffthq/src/chacha20.c **** }
+  11:./lib/shiffthq/src/chacha20.c **** 
+  12:./lib/shiffthq/src/chacha20.c **** static inline uint32_t u8t32le(uint8_t p[4]) {
+  13:./lib/shiffthq/src/chacha20.c ****     uint32_t value = p[3];
+  14:./lib/shiffthq/src/chacha20.c **** 
+  15:./lib/shiffthq/src/chacha20.c ****     value = (value << 8) | p[2];
+  16:./lib/shiffthq/src/chacha20.c ****     value = (value << 8) | p[1];
+  17:./lib/shiffthq/src/chacha20.c ****     value = (value << 8) | p[0];
+  18:./lib/shiffthq/src/chacha20.c **** 
+  19:./lib/shiffthq/src/chacha20.c ****     return value;
+  20:./lib/shiffthq/src/chacha20.c **** }
+  21:./lib/shiffthq/src/chacha20.c **** 
+  22:./lib/shiffthq/src/chacha20.c **** static inline uint32_t rotl32(uint32_t x, int n) {
+  23:./lib/shiffthq/src/chacha20.c ****     // http://blog.regehr.org/archives/1063
+  24:./lib/shiffthq/src/chacha20.c ****     return x << n | (x >> (-n & 31));
+  25:./lib/shiffthq/src/chacha20.c **** }
+  26:./lib/shiffthq/src/chacha20.c **** 
+  27:./lib/shiffthq/src/chacha20.c **** // https://tools.ietf.org/html/rfc7539#section-2.1
+  28:./lib/shiffthq/src/chacha20.c **** static void chacha20_quarterround(uint32_t *x, int a, int b, int c, int d) {
+  27              		.loc 1 28 76 view -0
+  28              		.cfi_startproc
+  29              		@ args = 4, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  29:./lib/shiffthq/src/chacha20.c ****     x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 16);
+  31              		.loc 1 29 5 view .LVU1
+  28:./lib/shiffthq/src/chacha20.c ****     x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 16);
+  32              		.loc 1 28 76 is_stmt 0 view .LVU2
+  33 0000 70B5     		push	{r4, r5, r6, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 16
+  36              		.cfi_offset 4, -16
+  37              		.cfi_offset 5, -12
+  38              		.cfi_offset 6, -8
+  39              		.cfi_offset 14, -4
+  40              		.loc 1 29 10 view .LVU3
+  41 0002 50F82140 		ldr	r4, [r0, r1, lsl #2]
+  42 0006 50F82260 		ldr	r6, [r0, r2, lsl #2]
+  28:./lib/shiffthq/src/chacha20.c ****     x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a], 16);
+  43              		.loc 1 28 76 view .LVU4
+  44 000a 049D     		ldr	r5, [sp, #16]
+  45              		.loc 1 29 10 view .LVU5
+  46 000c 3444     		add	r4, r4, r6
+  47 000e 40F82140 		str	r4, [r0, r1, lsl #2]
+  48              		.loc 1 29 19 is_stmt 1 view .LVU6
+  49              	.LVL1:
+  50              	.LBB10:
+  51              	.LBI10:
+  22:./lib/shiffthq/src/chacha20.c ****     // http://blog.regehr.org/archives/1063
+  52              		.loc 1 22 24 view .LVU7
+  53              	.LBB11:
+  24:./lib/shiffthq/src/chacha20.c **** }
+  54              		.loc 1 24 5 view .LVU8
+  55              	.LBE11:
+  56              	.LBE10:
+  57              		.loc 1 29 26 is_stmt 0 view .LVU9
+  58 0012 50F82560 		ldr	r6, [r0, r5, lsl #2]
+  59 0016 7440     		eors	r4, r4, r6
+  60              	.LVL2:
+  61              	.LBB13:
+  62              	.LBB12:
+  24:./lib/shiffthq/src/chacha20.c **** }
+  63              		.loc 1 24 19 view .LVU10
+  64 0018 4FEA3444 		ror	r4, r4, #16
+  65              	.LVL3:
+  24:./lib/shiffthq/src/chacha20.c **** }
+  66              		.loc 1 24 19 view .LVU11
+  67              	.LBE12:
+  68              	.LBE13:
+  69              		.loc 1 29 24 view .LVU12
+  70 001c 40F82540 		str	r4, [r0, r5, lsl #2]
+  30:./lib/shiffthq/src/chacha20.c ****     x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c], 12);
+  71              		.loc 1 30 5 is_stmt 1 view .LVU13
+  72              		.loc 1 30 10 is_stmt 0 view .LVU14
+  73 0020 50F82360 		ldr	r6, [r0, r3, lsl #2]
+  74 0024 3444     		add	r4, r4, r6
+  75 0026 40F82340 		str	r4, [r0, r3, lsl #2]
+  76              		.loc 1 30 19 is_stmt 1 view .LVU15
+  77              	.LVL4:
+  78              	.LBB14:
+  79              	.LBI14:
+  22:./lib/shiffthq/src/chacha20.c ****     // http://blog.regehr.org/archives/1063
+  80              		.loc 1 22 24 view .LVU16
+  81              	.LBB15:
+  24:./lib/shiffthq/src/chacha20.c **** }
+  82              		.loc 1 24 5 view .LVU17
+  83              	.LBE15:
+  84              	.LBE14:
+  85              		.loc 1 30 26 is_stmt 0 view .LVU18
+  86 002a 50F82260 		ldr	r6, [r0, r2, lsl #2]
+  87 002e 7440     		eors	r4, r4, r6
+  88              	.LVL5:
+  89              	.LBB17:
+  90              	.LBB16:
+  24:./lib/shiffthq/src/chacha20.c **** }
+  91              		.loc 1 24 19 view .LVU19
+  92 0030 4FEA3454 		ror	r4, r4, #20
+  93              	.LVL6:
+  24:./lib/shiffthq/src/chacha20.c **** }
+  94              		.loc 1 24 19 view .LVU20
+  95              	.LBE16:
+  96              	.LBE17:
+  97              		.loc 1 30 24 view .LVU21
+  98 0034 40F82240 		str	r4, [r0, r2, lsl #2]
+  31:./lib/shiffthq/src/chacha20.c ****     x[a] += x[b]; x[d] = rotl32(x[d] ^ x[a],  8);
+  99              		.loc 1 31 5 is_stmt 1 view .LVU22
+ 100              		.loc 1 31 10 is_stmt 0 view .LVU23
+ 101 0038 50F82160 		ldr	r6, [r0, r1, lsl #2]
+ 102 003c 3444     		add	r4, r4, r6
+ 103 003e 40F82140 		str	r4, [r0, r1, lsl #2]
+ 104              		.loc 1 31 19 is_stmt 1 view .LVU24
+ 105              	.LVL7:
+ 106              	.LBB18:
+ 107              	.LBI18:
+  22:./lib/shiffthq/src/chacha20.c ****     // http://blog.regehr.org/archives/1063
+ 108              		.loc 1 22 24 view .LVU25
+ 109              	.LBB19:
+  24:./lib/shiffthq/src/chacha20.c **** }
+ 110              		.loc 1 24 5 view .LVU26
+ 111              	.LBE19:
+ 112              	.LBE18:
+ 113              		.loc 1 31 26 is_stmt 0 view .LVU27
+ 114 0042 50F82510 		ldr	r1, [r0, r5, lsl #2]
+ 115              	.LVL8:
+ 116              		.loc 1 31 26 view .LVU28
+ 117 0046 6140     		eors	r1, r1, r4
+ 118              	.LVL9:
+ 119              	.LBB21:
+ 120              	.LBB20:
+  24:./lib/shiffthq/src/chacha20.c **** }
+ 121              		.loc 1 24 19 view .LVU29
+ 122 0048 4FEA3161 		ror	r1, r1, #24
+ 123              	.LVL10:
+  24:./lib/shiffthq/src/chacha20.c **** }
+ 124              		.loc 1 24 19 view .LVU30
+ 125              	.LBE20:
+ 126              	.LBE21:
+ 127              		.loc 1 31 24 view .LVU31
+ 128 004c 40F82510 		str	r1, [r0, r5, lsl #2]
+  32:./lib/shiffthq/src/chacha20.c ****     x[c] += x[d]; x[b] = rotl32(x[b] ^ x[c],  7);
+ 129              		.loc 1 32 5 is_stmt 1 view .LVU32
+ 130              		.loc 1 32 10 is_stmt 0 view .LVU33
+ 131 0050 50F82340 		ldr	r4, [r0, r3, lsl #2]
+ 132 0054 2144     		add	r1, r1, r4
+ 133 0056 40F82310 		str	r1, [r0, r3, lsl #2]
+ 134              		.loc 1 32 19 is_stmt 1 view .LVU34
+ 135              	.LVL11:
+ 136              	.LBB22:
+ 137              	.LBI22:
+  22:./lib/shiffthq/src/chacha20.c ****     // http://blog.regehr.org/archives/1063
+ 138              		.loc 1 22 24 view .LVU35
+ 139              	.LBB23:
+  24:./lib/shiffthq/src/chacha20.c **** }
+ 140              		.loc 1 24 5 view .LVU36
+  24:./lib/shiffthq/src/chacha20.c **** }
+ 141              		.loc 1 24 5 is_stmt 0 view .LVU37
+ 142              	.LBE23:
+ 143              	.LBE22:
+ 144              		.loc 1 32 26 view .LVU38
+ 145 005a 50F82230 		ldr	r3, [r0, r2, lsl #2]
+ 146              	.LVL12:
+ 147              		.loc 1 32 26 view .LVU39
+ 148 005e 5940     		eors	r1, r1, r3
+ 149              	.LBB25:
+ 150              	.LBB24:
+  24:./lib/shiffthq/src/chacha20.c **** }
+ 151              		.loc 1 24 19 view .LVU40
+ 152 0060 4FEA7161 		ror	r1, r1, #25
+ 153              	.LBE24:
+ 154              	.LBE25:
+ 155              		.loc 1 32 24 view .LVU41
+ 156 0064 40F82210 		str	r1, [r0, r2, lsl #2]
+  33:./lib/shiffthq/src/chacha20.c **** }
+ 157              		.loc 1 33 1 view .LVU42
+ 158 0068 70BD     		pop	{r4, r5, r6, pc}
+ 159              		.loc 1 33 1 view .LVU43
+ 160              		.cfi_endproc
+ 161              	.LFE3:
+ 163              		.section	.text.ChaCha20XOR,"ax",%progbits
+ 164              		.align	1
+ 165              		.global	ChaCha20XOR
+ 166              		.syntax unified
+ 167              		.thumb
+ 168              		.thumb_func
+ 169              		.fpu softvfp
+ 171              	ChaCha20XOR:
+ 172              	.LVL13:
+ 173              	.LFB7:
+  34:./lib/shiffthq/src/chacha20.c **** 
+  35:./lib/shiffthq/src/chacha20.c **** static void chacha20_serialize(uint32_t in[16], uint8_t output[64]) {
+  36:./lib/shiffthq/src/chacha20.c ****     int i;
+  37:./lib/shiffthq/src/chacha20.c ****     for (i = 0; i < 16; i++) {
+  38:./lib/shiffthq/src/chacha20.c ****         u32t8le(in[i], output + (i << 2));
+  39:./lib/shiffthq/src/chacha20.c ****     }
+  40:./lib/shiffthq/src/chacha20.c **** }
+  41:./lib/shiffthq/src/chacha20.c **** 
+  42:./lib/shiffthq/src/chacha20.c **** static void chacha20_block(uint32_t in[16], uint8_t out[64], int num_rounds) {
+  43:./lib/shiffthq/src/chacha20.c ****     int i;
+  44:./lib/shiffthq/src/chacha20.c ****     uint32_t x[16];
+  45:./lib/shiffthq/src/chacha20.c **** 
+  46:./lib/shiffthq/src/chacha20.c ****     memcpy(x, in, sizeof(uint32_t) * 16);
+  47:./lib/shiffthq/src/chacha20.c **** 
+  48:./lib/shiffthq/src/chacha20.c ****     for (i = num_rounds; i > 0; i -= 2) {
+  49:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+  50:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 1, 5,  9, 13);
+  51:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 2, 6, 10, 14);
+  52:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 3, 7, 11, 15);
+  53:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 5, 10, 15);
+  54:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 1, 6, 11, 12);
+  55:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 2, 7,  8, 13);
+  56:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 3, 4,  9, 14);
+  57:./lib/shiffthq/src/chacha20.c ****     }
+  58:./lib/shiffthq/src/chacha20.c **** 
+  59:./lib/shiffthq/src/chacha20.c ****     for (i = 0; i < 16; i++) {
+  60:./lib/shiffthq/src/chacha20.c ****         x[i] += in[i];
+  61:./lib/shiffthq/src/chacha20.c ****     }
+  62:./lib/shiffthq/src/chacha20.c **** 
+  63:./lib/shiffthq/src/chacha20.c ****     chacha20_serialize(x, out);
+  64:./lib/shiffthq/src/chacha20.c **** }
+  65:./lib/shiffthq/src/chacha20.c **** 
+  66:./lib/shiffthq/src/chacha20.c **** // https://tools.ietf.org/html/rfc7539#section-2.3
+  67:./lib/shiffthq/src/chacha20.c **** static void chacha20_init_state(uint32_t s[16], uint8_t key[32], uint32_t counter, uint8_t nonce[12
+  68:./lib/shiffthq/src/chacha20.c ****     int i;
+  69:./lib/shiffthq/src/chacha20.c **** 
+  70:./lib/shiffthq/src/chacha20.c ****     // refer: https://dxr.mozilla.org/mozilla-beta/source/security/nss/lib/freebl/chacha20.c
+  71:./lib/shiffthq/src/chacha20.c ****     // convert magic number to string: "expand 32-byte k"
+  72:./lib/shiffthq/src/chacha20.c ****     s[0] = 0x61707865;
+  73:./lib/shiffthq/src/chacha20.c ****     s[1] = 0x3320646e;
+  74:./lib/shiffthq/src/chacha20.c ****     s[2] = 0x79622d32;
+  75:./lib/shiffthq/src/chacha20.c ****     s[3] = 0x6b206574;
+  76:./lib/shiffthq/src/chacha20.c **** 
+  77:./lib/shiffthq/src/chacha20.c ****     for (i = 0; i < 8; i++) {
+  78:./lib/shiffthq/src/chacha20.c ****         s[4 + i] = u8t32le(key + i * 4);
+  79:./lib/shiffthq/src/chacha20.c ****     }
+  80:./lib/shiffthq/src/chacha20.c **** 
+  81:./lib/shiffthq/src/chacha20.c ****     s[12] = counter;
+  82:./lib/shiffthq/src/chacha20.c **** 
+  83:./lib/shiffthq/src/chacha20.c ****     for (i = 0; i < 3; i++) {
+  84:./lib/shiffthq/src/chacha20.c ****         s[13 + i] = u8t32le(nonce + i * 4);
+  85:./lib/shiffthq/src/chacha20.c ****     }
+  86:./lib/shiffthq/src/chacha20.c **** }
+  87:./lib/shiffthq/src/chacha20.c **** 
+  88:./lib/shiffthq/src/chacha20.c **** void ChaCha20XOR(uint8_t key[32], uint32_t counter, uint8_t nonce[12], uint8_t *in, uint8_t *out, i
+ 174              		.loc 1 88 110 is_stmt 1 view -0
+ 175              		.cfi_startproc
+ 176              		@ args = 8, pretend = 0, frame = 192
+ 177              		@ frame_needed = 0, uses_anonymous_args = 0
+  89:./lib/shiffthq/src/chacha20.c ****     int i, j;
+ 178              		.loc 1 89 5 view .LVU45
+  90:./lib/shiffthq/src/chacha20.c **** 
+  91:./lib/shiffthq/src/chacha20.c ****     uint32_t s[16];
+ 179              		.loc 1 91 5 view .LVU46
+  92:./lib/shiffthq/src/chacha20.c ****     uint8_t block[64];
+ 180              		.loc 1 92 5 view .LVU47
+  93:./lib/shiffthq/src/chacha20.c **** 
+  94:./lib/shiffthq/src/chacha20.c ****     chacha20_init_state(s, key, counter, nonce);
+ 181              		.loc 1 94 5 view .LVU48
+  88:./lib/shiffthq/src/chacha20.c ****     int i, j;
+ 182              		.loc 1 88 110 is_stmt 0 view .LVU49
+ 183 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 184              	.LCFI1:
+ 185              		.cfi_def_cfa_offset 36
+ 186              		.cfi_offset 4, -36
+ 187              		.cfi_offset 5, -32
+ 188              		.cfi_offset 6, -28
+ 189              		.cfi_offset 7, -24
+ 190              		.cfi_offset 8, -20
+ 191              		.cfi_offset 9, -16
+ 192              		.cfi_offset 10, -12
+ 193              		.cfi_offset 11, -8
+ 194              		.cfi_offset 14, -4
+ 195 0004 0E46     		mov	r6, r1
+ 196 0006 1D46     		mov	r5, r3
+ 197              	.LBB38:
+ 198              	.LBB39:
+  73:./lib/shiffthq/src/chacha20.c ****     s[2] = 0x79622d32;
+ 199              		.loc 1 73 10 view .LVU50
+ 200 0008 5849     		ldr	r1, .L16
+ 201              	.LVL14:
+  73:./lib/shiffthq/src/chacha20.c ****     s[2] = 0x79622d32;
+ 202              		.loc 1 73 10 view .LVU51
+ 203 000a 594B     		ldr	r3, .L16+4
+ 204              	.LVL15:
+  73:./lib/shiffthq/src/chacha20.c ****     s[2] = 0x79622d32;
+ 205              		.loc 1 73 10 view .LVU52
+ 206              	.LBE39:
+ 207              	.LBE38:
+  88:./lib/shiffthq/src/chacha20.c ****     int i, j;
+ 208              		.loc 1 88 110 view .LVU53
+ 209 000c B3B0     		sub	sp, sp, #204
+ 210              	.LCFI2:
+ 211              		.cfi_def_cfa_offset 240
+ 212              	.LVL16:
+ 213              	.LBB42:
+ 214              	.LBI38:
+  67:./lib/shiffthq/src/chacha20.c ****     int i;
+ 215              		.loc 1 67 13 is_stmt 1 view .LVU54
+ 216              	.LBB40:
+  68:./lib/shiffthq/src/chacha20.c **** 
+ 217              		.loc 1 68 5 view .LVU55
+  72:./lib/shiffthq/src/chacha20.c ****     s[1] = 0x3320646e;
+ 218              		.loc 1 72 5 view .LVU56
+  73:./lib/shiffthq/src/chacha20.c ****     s[2] = 0x79622d32;
+ 219              		.loc 1 73 10 is_stmt 0 view .LVU57
+ 220 000e CDE90213 		strd	r1, r3, [sp, #8]
+  74:./lib/shiffthq/src/chacha20.c ****     s[3] = 0x6b206574;
+ 221              		.loc 1 74 5 is_stmt 1 view .LVU58
+  74:./lib/shiffthq/src/chacha20.c ****     s[3] = 0x6b206574;
+ 222              		.loc 1 74 10 is_stmt 0 view .LVU59
+ 223 0012 584B     		ldr	r3, .L16+8
+ 224 0014 0493     		str	r3, [sp, #16]
+  75:./lib/shiffthq/src/chacha20.c **** 
+ 225              		.loc 1 75 5 is_stmt 1 view .LVU60
+  75:./lib/shiffthq/src/chacha20.c **** 
+ 226              		.loc 1 75 10 is_stmt 0 view .LVU61
+ 227 0016 A3F16463 		sub	r3, r3, #239075328
+ 228 001a A3F5E333 		sub	r3, r3, #116224
+ 229 001e A3F5DF73 		sub	r3, r3, #446
+ 230              	.LBE40:
+ 231              	.LBE42:
+  88:./lib/shiffthq/src/chacha20.c ****     int i, j;
+ 232              		.loc 1 88 110 view .LVU62
+ 233 0022 3D9F     		ldr	r7, [sp, #244]
+ 234              	.LBB43:
+ 235              	.LBB41:
+  75:./lib/shiffthq/src/chacha20.c **** 
+ 236              		.loc 1 75 10 view .LVU63
+ 237 0024 0593     		str	r3, [sp, #20]
+  77:./lib/shiffthq/src/chacha20.c ****         s[4 + i] = u8t32le(key + i * 4);
+ 238              		.loc 1 77 5 is_stmt 1 view .LVU64
+ 239              	.LVL17:
+  77:./lib/shiffthq/src/chacha20.c ****         s[4 + i] = u8t32le(key + i * 4);
+ 240              		.loc 1 77 17 view .LVU65
+  78:./lib/shiffthq/src/chacha20.c ****     }
+ 241              		.loc 1 78 18 is_stmt 0 view .LVU66
+ 242 0026 0DF1180C 		add	ip, sp, #24
+ 243 002a 0346     		mov	r3, r0
+ 244 002c 00F1200E 		add	lr, r0, #32
+ 245              	.LVL18:
+ 246              	.L3:
+  78:./lib/shiffthq/src/chacha20.c ****     }
+ 247              		.loc 1 78 18 view .LVU67
+ 248 0030 1868     		ldr	r0, [r3]	@ unaligned
+ 249 0032 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 250 0034 6446     		mov	r4, ip
+ 251 0036 03C4     		stmia	r4!, {r0, r1}
+ 252 0038 0833     		adds	r3, r3, #8
+ 253 003a 7345     		cmp	r3, lr
+ 254 003c A446     		mov	ip, r4
+ 255 003e F7D1     		bne	.L3
+ 256              	.LVL19:
+  81:./lib/shiffthq/src/chacha20.c **** 
+ 257              		.loc 1 81 5 is_stmt 1 view .LVU68
+  84:./lib/shiffthq/src/chacha20.c ****     }
+ 258              		.loc 1 84 19 is_stmt 0 view .LVU69
+ 259 0040 1068     		ldr	r0, [r2]	@ unaligned
+ 260 0042 5168     		ldr	r1, [r2, #4]	@ unaligned
+  81:./lib/shiffthq/src/chacha20.c **** 
+ 261              		.loc 1 81 11 view .LVU70
+ 262 0044 0E96     		str	r6, [sp, #56]
+  83:./lib/shiffthq/src/chacha20.c ****         s[13 + i] = u8t32le(nonce + i * 4);
+ 263              		.loc 1 83 5 is_stmt 1 view .LVU71
+ 264              	.LVL20:
+  83:./lib/shiffthq/src/chacha20.c ****         s[13 + i] = u8t32le(nonce + i * 4);
+ 265              		.loc 1 83 17 view .LVU72
+  84:./lib/shiffthq/src/chacha20.c ****     }
+ 266              		.loc 1 84 19 is_stmt 0 view .LVU73
+ 267 0046 0FAB     		add	r3, sp, #60
+ 268 0048 03C3     		stmia	r3!, {r0, r1}
+ 269 004a 9068     		ldr	r0, [r2, #8]	@ unaligned
+ 270 004c 1860     		str	r0, [r3]
+ 271              	.LVL21:
+  84:./lib/shiffthq/src/chacha20.c ****     }
+ 272              		.loc 1 84 19 view .LVU74
+ 273              	.LBE41:
+ 274              	.LBE43:
+  95:./lib/shiffthq/src/chacha20.c **** 
+  96:./lib/shiffthq/src/chacha20.c ****     for (i = 0; i < inlen; i += 64) {
+ 275              		.loc 1 96 12 view .LVU75
+ 276 004e 0024     		movs	r4, #0
+ 277              	.LVL22:
+ 278              	.L4:
+ 279              		.loc 1 96 17 is_stmt 1 discriminator 1 view .LVU76
+ 280              		.loc 1 96 5 is_stmt 0 discriminator 1 view .LVU77
+ 281 0050 BC42     		cmp	r4, r7
+ 282 0052 02DB     		blt	.L11
+  97:./lib/shiffthq/src/chacha20.c ****         chacha20_block(s, block, 20);
+  98:./lib/shiffthq/src/chacha20.c ****         s[12]++;
+  99:./lib/shiffthq/src/chacha20.c **** 
+ 100:./lib/shiffthq/src/chacha20.c ****         for (j = i; j < i + 64; j++) {
+ 101:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 102:./lib/shiffthq/src/chacha20.c ****                 break;
+ 103:./lib/shiffthq/src/chacha20.c ****             }
+ 104:./lib/shiffthq/src/chacha20.c ****             out[j] = in[j] ^ block[j - i];
+ 105:./lib/shiffthq/src/chacha20.c ****         }
+ 106:./lib/shiffthq/src/chacha20.c ****     }
+ 107:./lib/shiffthq/src/chacha20.c **** }
+ 283              		.loc 1 107 1 view .LVU78
+ 284 0054 33B0     		add	sp, sp, #204
+ 285              	.LCFI3:
+ 286              		.cfi_remember_state
+ 287              		.cfi_def_cfa_offset 36
+ 288              		@ sp needed
+ 289 0056 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 290              	.LVL23:
+ 291              	.L11:
+ 292              	.LCFI4:
+ 293              		.cfi_restore_state
+  97:./lib/shiffthq/src/chacha20.c ****         chacha20_block(s, block, 20);
+ 294              		.loc 1 97 9 is_stmt 1 view .LVU79
+ 295              	.LBB44:
+ 296              	.LBI44:
+  42:./lib/shiffthq/src/chacha20.c ****     int i;
+ 297              		.loc 1 42 13 view .LVU80
+ 298              	.LBB45:
+  43:./lib/shiffthq/src/chacha20.c ****     uint32_t x[16];
+ 299              		.loc 1 43 5 view .LVU81
+  44:./lib/shiffthq/src/chacha20.c **** 
+ 300              		.loc 1 44 5 view .LVU82
+  46:./lib/shiffthq/src/chacha20.c **** 
+ 301              		.loc 1 46 5 view .LVU83
+ 302 005a 0DF1080C 		add	ip, sp, #8
+ 303              	.LVL24:
+  46:./lib/shiffthq/src/chacha20.c **** 
+ 304              		.loc 1 46 5 is_stmt 0 view .LVU84
+ 305 005e BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+ 306              	.LVL25:
+  46:./lib/shiffthq/src/chacha20.c **** 
+ 307              		.loc 1 46 5 view .LVU85
+ 308 0062 22AE     		add	r6, sp, #136
+ 309 0064 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 310 0066 BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+ 311              	.LVL26:
+  46:./lib/shiffthq/src/chacha20.c **** 
+ 312              		.loc 1 46 5 view .LVU86
+ 313 006a 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 314 006c BCE80F00 		ldmia	ip!, {r0, r1, r2, r3}
+ 315              	.LVL27:
+  46:./lib/shiffthq/src/chacha20.c **** 
+ 316              		.loc 1 46 5 view .LVU87
+ 317 0070 0FC6     		stmia	r6!, {r0, r1, r2, r3}
+ 318 0072 9CE80F00 		ldm	ip, {r0, r1, r2, r3}
+ 319 0076 86E80F00 		stm	r6, {r0, r1, r2, r3}
+  48:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+ 320              		.loc 1 48 5 is_stmt 1 view .LVU88
+ 321              	.LVL28:
+  48:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+ 322              		.loc 1 48 26 view .LVU89
+  46:./lib/shiffthq/src/chacha20.c **** 
+ 323              		.loc 1 46 5 is_stmt 0 view .LVU90
+ 324 007a 0A26     		movs	r6, #10
+ 325              	.LVL29:
+ 326              	.L5:
+  49:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 1, 5,  9, 13);
+ 327              		.loc 1 49 9 is_stmt 1 view .LVU91
+ 328 007c 4FF00C0A 		mov	r10, #12
+ 329 0080 22A8     		add	r0, sp, #136
+ 330 0082 0823     		movs	r3, #8
+ 331 0084 0422     		movs	r2, #4
+ 332 0086 0021     		movs	r1, #0
+  50:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 2, 6, 10, 14);
+ 333              		.loc 1 50 9 is_stmt 0 view .LVU92
+ 334 0088 4FF00D09 		mov	r9, #13
+  49:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 1, 5,  9, 13);
+ 335              		.loc 1 49 9 view .LVU93
+ 336 008c CDF800A0 		str	r10, [sp]
+ 337 0090 FFF7FEFF 		bl	chacha20_quarterround
+ 338              	.LVL30:
+  50:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 2, 6, 10, 14);
+ 339              		.loc 1 50 9 is_stmt 1 view .LVU94
+  51:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 3, 7, 11, 15);
+ 340              		.loc 1 51 9 is_stmt 0 view .LVU95
+ 341 0094 4FF00E08 		mov	r8, #14
+  50:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 2, 6, 10, 14);
+ 342              		.loc 1 50 9 view .LVU96
+ 343 0098 0923     		movs	r3, #9
+ 344 009a 0522     		movs	r2, #5
+ 345 009c 0121     		movs	r1, #1
+ 346 009e CDF80090 		str	r9, [sp]
+ 347 00a2 FFF7FEFF 		bl	chacha20_quarterround
+ 348              	.LVL31:
+  51:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 3, 7, 11, 15);
+ 349              		.loc 1 51 9 is_stmt 1 view .LVU97
+  52:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 5, 10, 15);
+ 350              		.loc 1 52 9 is_stmt 0 view .LVU98
+ 351 00a6 4FF00F0B 		mov	fp, #15
+  51:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 3, 7, 11, 15);
+ 352              		.loc 1 51 9 view .LVU99
+ 353 00aa 0A23     		movs	r3, #10
+ 354 00ac 0622     		movs	r2, #6
+ 355 00ae 0221     		movs	r1, #2
+ 356 00b0 CDF80080 		str	r8, [sp]
+ 357 00b4 FFF7FEFF 		bl	chacha20_quarterround
+ 358              	.LVL32:
+  52:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 5, 10, 15);
+ 359              		.loc 1 52 9 is_stmt 1 view .LVU100
+ 360 00b8 0B23     		movs	r3, #11
+ 361 00ba 0722     		movs	r2, #7
+ 362 00bc 0321     		movs	r1, #3
+ 363 00be CDF800B0 		str	fp, [sp]
+ 364 00c2 FFF7FEFF 		bl	chacha20_quarterround
+ 365              	.LVL33:
+  53:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 1, 6, 11, 12);
+ 366              		.loc 1 53 9 view .LVU101
+ 367 00c6 0A23     		movs	r3, #10
+ 368 00c8 0522     		movs	r2, #5
+ 369 00ca 0021     		movs	r1, #0
+ 370 00cc CDF800B0 		str	fp, [sp]
+ 371 00d0 FFF7FEFF 		bl	chacha20_quarterround
+ 372              	.LVL34:
+  54:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 2, 7,  8, 13);
+ 373              		.loc 1 54 9 view .LVU102
+ 374 00d4 0B23     		movs	r3, #11
+ 375 00d6 0622     		movs	r2, #6
+ 376 00d8 0121     		movs	r1, #1
+ 377 00da CDF800A0 		str	r10, [sp]
+ 378 00de FFF7FEFF 		bl	chacha20_quarterround
+ 379              	.LVL35:
+  55:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 3, 4,  9, 14);
+ 380              		.loc 1 55 9 view .LVU103
+ 381 00e2 0823     		movs	r3, #8
+ 382 00e4 0722     		movs	r2, #7
+ 383 00e6 0221     		movs	r1, #2
+ 384 00e8 CDF80090 		str	r9, [sp]
+ 385 00ec FFF7FEFF 		bl	chacha20_quarterround
+ 386              	.LVL36:
+  56:./lib/shiffthq/src/chacha20.c ****     }
+ 387              		.loc 1 56 9 view .LVU104
+ 388 00f0 CDF80080 		str	r8, [sp]
+ 389 00f4 0923     		movs	r3, #9
+ 390 00f6 0422     		movs	r2, #4
+ 391 00f8 0321     		movs	r1, #3
+ 392 00fa FFF7FEFF 		bl	chacha20_quarterround
+ 393              	.LVL37:
+  48:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+ 394              		.loc 1 48 33 view .LVU105
+  48:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+ 395              		.loc 1 48 26 view .LVU106
+  48:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+ 396              		.loc 1 48 5 is_stmt 0 view .LVU107
+ 397 00fe 013E     		subs	r6, r6, #1
+ 398              	.LVL38:
+  48:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+ 399              		.loc 1 48 5 view .LVU108
+ 400 0100 BCD1     		bne	.L5
+ 401 0102 02AE     		add	r6, sp, #8
+ 402              	.LVL39:
+  48:./lib/shiffthq/src/chacha20.c ****         chacha20_quarterround(x, 0, 4,  8, 12);
+ 403              		.loc 1 48 5 view .LVU109
+ 404 0104 0246     		mov	r2, r0
+ 405 0106 1023     		movs	r3, #16
+ 406              	.LVL40:
+ 407              	.L6:
+  60:./lib/shiffthq/src/chacha20.c ****     }
+ 408              		.loc 1 60 9 is_stmt 1 view .LVU110
+  60:./lib/shiffthq/src/chacha20.c ****     }
+ 409              		.loc 1 60 14 is_stmt 0 view .LVU111
+ 410 0108 D2F800C0 		ldr	ip, [r2]
+  60:./lib/shiffthq/src/chacha20.c ****     }
+ 411              		.loc 1 60 19 view .LVU112
+ 412 010c 56F8041B 		ldr	r1, [r6], #4
+  59:./lib/shiffthq/src/chacha20.c ****         x[i] += in[i];
+ 413              		.loc 1 59 5 view .LVU113
+ 414 0110 013B     		subs	r3, r3, #1
+ 415              	.LVL41:
+  60:./lib/shiffthq/src/chacha20.c ****     }
+ 416              		.loc 1 60 14 view .LVU114
+ 417 0112 6144     		add	r1, r1, ip
+ 418 0114 42F8041B 		str	r1, [r2], #4
+  59:./lib/shiffthq/src/chacha20.c ****         x[i] += in[i];
+ 419              		.loc 1 59 25 is_stmt 1 view .LVU115
+ 420              	.LVL42:
+  59:./lib/shiffthq/src/chacha20.c ****         x[i] += in[i];
+ 421              		.loc 1 59 17 view .LVU116
+  59:./lib/shiffthq/src/chacha20.c ****         x[i] += in[i];
+ 422              		.loc 1 59 5 is_stmt 0 view .LVU117
+ 423 0118 F6D1     		bne	.L6
+ 424 011a 12AE     		add	r6, sp, #72
+ 425              	.LVL43:
+  59:./lib/shiffthq/src/chacha20.c ****         x[i] += in[i];
+ 426              		.loc 1 59 5 view .LVU118
+ 427 011c 3246     		mov	r2, r6
+ 428              	.L7:
+ 429              	.LVL44:
+ 430              	.LBB46:
+ 431              	.LBB47:
+  38:./lib/shiffthq/src/chacha20.c ****     }
+ 432              		.loc 1 38 9 is_stmt 1 view .LVU119
+ 433 011e 50F8041B 		ldr	r1, [r0], #4
+ 434              	.LVL45:
+ 435              	.LBB48:
+ 436              	.LBI48:
+   5:./lib/shiffthq/src/chacha20.c ****     p[0] = v & 0xff;
+ 437              		.loc 1 5 20 view .LVU120
+ 438              	.LBB49:
+   6:./lib/shiffthq/src/chacha20.c ****     p[1] = (v >> 8) & 0xff;
+ 439              		.loc 1 6 5 view .LVU121
+   6:./lib/shiffthq/src/chacha20.c ****     p[1] = (v >> 8) & 0xff;
+ 440              		.loc 1 6 10 is_stmt 0 view .LVU122
+ 441 0122 1170     		strb	r1, [r2]
+   7:./lib/shiffthq/src/chacha20.c ****     p[2] = (v >> 16) & 0xff;
+ 442              		.loc 1 7 5 is_stmt 1 view .LVU123
+   7:./lib/shiffthq/src/chacha20.c ****     p[2] = (v >> 16) & 0xff;
+ 443              		.loc 1 7 15 is_stmt 0 view .LVU124
+ 444 0124 4FEA112C 		lsr	ip, r1, #8
+ 445              	.LBE49:
+ 446              	.LBE48:
+  37:./lib/shiffthq/src/chacha20.c ****         u32t8le(in[i], output + (i << 2));
+ 447              		.loc 1 37 26 view .LVU125
+ 448 0128 0133     		adds	r3, r3, #1
+ 449              	.LVL46:
+ 450              	.LBB52:
+ 451              	.LBB50:
+   7:./lib/shiffthq/src/chacha20.c ****     p[2] = (v >> 16) & 0xff;
+ 452              		.loc 1 7 10 view .LVU126
+ 453 012a 82F801C0 		strb	ip, [r2, #1]
+   8:./lib/shiffthq/src/chacha20.c ****     p[3] = (v >> 24) & 0xff;
+ 454              		.loc 1 8 5 is_stmt 1 view .LVU127
+ 455              	.LBE50:
+ 456              	.LBE52:
+  37:./lib/shiffthq/src/chacha20.c ****         u32t8le(in[i], output + (i << 2));
+ 457              		.loc 1 37 5 is_stmt 0 view .LVU128
+ 458 012e 102B     		cmp	r3, #16
+ 459              	.LBB53:
+ 460              	.LBB51:
+   8:./lib/shiffthq/src/chacha20.c ****     p[3] = (v >> 24) & 0xff;
+ 461              		.loc 1 8 15 view .LVU129
+ 462 0130 4FEA114C 		lsr	ip, r1, #16
+   9:./lib/shiffthq/src/chacha20.c **** }
+ 463              		.loc 1 9 15 view .LVU130
+ 464 0134 4FEA1161 		lsr	r1, r1, #24
+ 465              	.LVL47:
+   8:./lib/shiffthq/src/chacha20.c ****     p[3] = (v >> 24) & 0xff;
+ 466              		.loc 1 8 10 view .LVU131
+ 467 0138 82F802C0 		strb	ip, [r2, #2]
+   9:./lib/shiffthq/src/chacha20.c **** }
+ 468              		.loc 1 9 5 is_stmt 1 view .LVU132
+   9:./lib/shiffthq/src/chacha20.c **** }
+ 469              		.loc 1 9 10 is_stmt 0 view .LVU133
+ 470 013c D170     		strb	r1, [r2, #3]
+ 471              	.LVL48:
+   9:./lib/shiffthq/src/chacha20.c **** }
+ 472              		.loc 1 9 10 view .LVU134
+ 473              	.LBE51:
+ 474              	.LBE53:
+  37:./lib/shiffthq/src/chacha20.c ****         u32t8le(in[i], output + (i << 2));
+ 475              		.loc 1 37 25 is_stmt 1 view .LVU135
+  37:./lib/shiffthq/src/chacha20.c ****         u32t8le(in[i], output + (i << 2));
+ 476              		.loc 1 37 17 view .LVU136
+  37:./lib/shiffthq/src/chacha20.c ****         u32t8le(in[i], output + (i << 2));
+ 477              		.loc 1 37 5 is_stmt 0 view .LVU137
+ 478 013e 02F10402 		add	r2, r2, #4
+ 479 0142 ECD1     		bne	.L7
+ 480              	.LVL49:
+  37:./lib/shiffthq/src/chacha20.c ****         u32t8le(in[i], output + (i << 2));
+ 481              		.loc 1 37 5 view .LVU138
+ 482              	.LBE47:
+ 483              	.LBE46:
+ 484              	.LBE45:
+ 485              	.LBE44:
+  98:./lib/shiffthq/src/chacha20.c **** 
+ 486              		.loc 1 98 9 is_stmt 1 view .LVU139
+  98:./lib/shiffthq/src/chacha20.c **** 
+ 487              		.loc 1 98 14 is_stmt 0 view .LVU140
+ 488 0144 0E9B     		ldr	r3, [sp, #56]
+ 489 0146 0133     		adds	r3, r3, #1
+ 490 0148 0E93     		str	r3, [sp, #56]
+ 100:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 491              		.loc 1 100 9 is_stmt 1 view .LVU141
+ 492              	.LVL50:
+ 100:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 493              		.loc 1 100 9 is_stmt 0 view .LVU142
+ 494 014a 04F13F01 		add	r1, r4, #63
+ 495 014e 2346     		mov	r3, r4
+ 496              	.LVL51:
+ 497              	.L8:
+ 100:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 498              		.loc 1 100 21 is_stmt 1 discriminator 1 view .LVU143
+ 100:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 499              		.loc 1 100 9 is_stmt 0 discriminator 1 view .LVU144
+ 500 0150 8B42     		cmp	r3, r1
+ 501 0152 01DD     		ble	.L10
+ 502              	.L9:
+  96:./lib/shiffthq/src/chacha20.c ****         chacha20_block(s, block, 20);
+ 503              		.loc 1 96 28 is_stmt 1 discriminator 2 view .LVU145
+  96:./lib/shiffthq/src/chacha20.c ****         chacha20_block(s, block, 20);
+ 504              		.loc 1 96 30 is_stmt 0 discriminator 2 view .LVU146
+ 505 0154 4034     		adds	r4, r4, #64
+ 506              	.LVL52:
+  96:./lib/shiffthq/src/chacha20.c ****         chacha20_block(s, block, 20);
+ 507              		.loc 1 96 30 discriminator 2 view .LVU147
+ 508 0156 7BE7     		b	.L4
+ 509              	.L10:
+ 101:./lib/shiffthq/src/chacha20.c ****                 break;
+ 510              		.loc 1 101 13 is_stmt 1 view .LVU148
+ 101:./lib/shiffthq/src/chacha20.c ****                 break;
+ 511              		.loc 1 101 16 is_stmt 0 view .LVU149
+ 512 0158 BB42     		cmp	r3, r7
+ 513 015a FBD0     		beq	.L9
+ 104:./lib/shiffthq/src/chacha20.c ****         }
+ 514              		.loc 1 104 13 is_stmt 1 discriminator 2 view .LVU150
+ 104:./lib/shiffthq/src/chacha20.c ****         }
+ 515              		.loc 1 104 20 is_stmt 0 discriminator 2 view .LVU151
+ 516 015c E85C     		ldrb	r0, [r5, r3]	@ zero_extendqisi2
+ 104:./lib/shiffthq/src/chacha20.c ****         }
+ 517              		.loc 1 104 35 discriminator 2 view .LVU152
+ 518 015e 16F8012B 		ldrb	r2, [r6], #1	@ zero_extendqisi2
+ 104:./lib/shiffthq/src/chacha20.c ****         }
+ 519              		.loc 1 104 20 discriminator 2 view .LVU153
+ 520 0162 4240     		eors	r2, r2, r0
+ 521 0164 3C98     		ldr	r0, [sp, #240]
+ 522 0166 C254     		strb	r2, [r0, r3]
+ 100:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 523              		.loc 1 100 33 is_stmt 1 discriminator 2 view .LVU154
+ 100:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 524              		.loc 1 100 34 is_stmt 0 discriminator 2 view .LVU155
+ 525 0168 0133     		adds	r3, r3, #1
+ 526              	.LVL53:
+ 100:./lib/shiffthq/src/chacha20.c ****             if (j >= inlen) {
+ 527              		.loc 1 100 34 discriminator 2 view .LVU156
+ 528 016a F1E7     		b	.L8
+ 529              	.L17:
+ 530              		.align	2
+ 531              	.L16:
+ 532 016c 65787061 		.word	1634760805
+ 533 0170 6E642033 		.word	857760878
+ 534 0174 322D6279 		.word	2036477234
+ 535              		.cfi_endproc
+ 536              	.LFE7:
+ 538              		.text
+ 539              	.Letext0:
+ 540              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 chacha20.c
+     /tmp/ccCxKaui.s:16     .text.chacha20_quarterround:0000000000000000 $t
+     /tmp/ccCxKaui.s:23     .text.chacha20_quarterround:0000000000000000 chacha20_quarterround
+     /tmp/ccCxKaui.s:164    .text.ChaCha20XOR:0000000000000000 $t
+     /tmp/ccCxKaui.s:171    .text.ChaCha20XOR:0000000000000000 ChaCha20XOR
+     /tmp/ccCxKaui.s:532    .text.ChaCha20XOR:000000000000016c $d
+
+NO UNDEFINED SYMBOLS

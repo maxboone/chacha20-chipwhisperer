@@ -1,40 +1,40 @@
    1              		.cpu cortex-m0
-   2              		.arch armv6s-m
-   3              		.fpu softvfp
-   4              		.eabi_attribute 20, 1
-   5              		.eabi_attribute 21, 1
-   6              		.eabi_attribute 23, 3
-   7              		.eabi_attribute 24, 1
-   8              		.eabi_attribute 25, 1
-   9              		.eabi_attribute 26, 1
-  10              		.eabi_attribute 30, 4
-  11              		.eabi_attribute 34, 0
-  12              		.eabi_attribute 18, 4
-  13              		.file	"shiffthq.c"
-  14              		.text
-  15              	.Ltext0:
-  16              		.cfi_sections	.debug_frame
-  17              		.file 1 "shiffthq.c"
-  18              		.section	.rodata.str1.1,"aMS",%progbits,1
-  19              	.LC2:
-  20 0000 48656C6C 		.ascii	"Hello from Chipwhispererer, Im only here to get enc"
-  20      6F206672 
-  20      6F6D2043 
-  20      68697077 
-  20      68697370 
-  21 0033 72797074 		.ascii	"rypted and yo\000"
-  21      65642061 
-  21      6E642079 
-  21      6F00
-  22              		.section	.text.set_nonce,"ax",%progbits
-  23              		.align	1
-  24              		.global	set_nonce
-  25              		.syntax unified
-  26              		.code	16
-  27              		.thumb_func
-  29              	set_nonce:
-  30              	.LVL0:
-  31              	.LFB3:
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 4
+   9              		.eabi_attribute 34, 0
+  10              		.eabi_attribute 18, 4
+  11              		.file	"shiffthq.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.rodata.str1.1,"aMS",%progbits,1
+  16              	.LC2:
+  17 0000 48656C6C 		.ascii	"Hello from Chipwhispererer, Im only here to get enc"
+  17      6F206672 
+  17      6F6D2043 
+  17      68697077 
+  17      68697370 
+  18 0033 72797074 		.ascii	"rypted and yo\000"
+  18      65642061 
+  18      6E642079 
+  18      6F00
+  19              		.section	.text.set_nonce,"ax",%progbits
+  20              		.align	1
+  21              		.global	set_nonce
+  22              		.arch armv6s-m
+  23              		.syntax unified
+  24              		.code	16
+  25              		.thumb_func
+  26              		.fpu softvfp
+  28              	set_nonce:
+  29              	.LVL0:
+  30              	.LFB3:
+  31              		.file 1 "shiffthq.c"
    1:shiffthq.c    **** #include "chacha20.h"
    2:shiffthq.c    **** #include "simpleserial.h"
    3:shiffthq.c    **** 
@@ -141,18 +141,15 @@
   76 001a 03AD     		add	r5, sp, #12
   77 001c 2B70     		strb	r3, [r5]
   78 001e 6379     		ldrb	r3, [r4, #5]
-  79 0020 6278     		ldrb	r2, [r4, #1]
+  79 0020 2178     		ldrb	r1, [r4]
   80 0022 6B70     		strb	r3, [r5, #1]
   81 0024 A379     		ldrb	r3, [r4, #6]
-  82 0026 1202     		lsls	r2, r2, #8
+  82 0026 A278     		ldrb	r2, [r4, #2]
   83 0028 AB70     		strb	r3, [r5, #2]
   84 002a E379     		ldrb	r3, [r4, #7]
-  85              		.loc 1 53 13 view .LVU13
-  86 002c 1849     		ldr	r1, .L4+4
-  35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
-  87              		.loc 1 35 13 view .LVU14
-  88 002e EB70     		strb	r3, [r5, #3]
-  89 0030 237A     		ldrb	r3, [r4, #8]
+  85 002c 1204     		lsls	r2, r2, #16
+  86 002e EB70     		strb	r3, [r5, #3]
+  87 0030 237A     		ldrb	r3, [r4, #8]
   54:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
   55:shiffthq.c    ****             0x6f, 0x6d, 0x20, 0x43, 0x68, 0x69, 0x70, 0x77,
   56:shiffthq.c    ****             0x68, 0x69, 0x73, 0x70, 0x65, 0x72, 0x65, 0x72,
@@ -166,95 +163,98 @@
   64:shiffthq.c    **** 
   65:shiffthq.c    ****     // encrypt
   66:shiffthq.c    ****     ChaCha20XOR(key, counter, nonce, input, encrypt, INPUT_SIZE);
-  90              		.loc 1 66 5 view .LVU15
-  91 0032 0EAF     		add	r7, sp, #56
+  88              		.loc 1 66 5 view .LVU13
+  89 0032 0EAF     		add	r7, sp, #56
   35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
-  92              		.loc 1 35 13 view .LVU16
-  93 0034 2B71     		strb	r3, [r5, #4]
-  94 0036 637A     		ldrb	r3, [r4, #9]
+  90              		.loc 1 35 13 view .LVU14
+  91 0034 2B71     		strb	r3, [r5, #4]
+  92 0036 637A     		ldrb	r3, [r4, #9]
   53:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
-  95              		.loc 1 53 13 view .LVU17
-  96 0038 1EA8     		add	r0, sp, #120
+  93              		.loc 1 53 13 view .LVU15
+  94 0038 1EA8     		add	r0, sp, #120
   35:shiffthq.c    ****             nc[4], nc[5], nc[6], nc[7],
-  97              		.loc 1 35 13 view .LVU18
-  98 003a 6B71     		strb	r3, [r5, #5]
-  99 003c A37A     		ldrb	r3, [r4, #10]
- 100 003e AB71     		strb	r3, [r5, #6]
- 101 0040 E37A     		ldrb	r3, [r4, #11]
- 102 0042 EB71     		strb	r3, [r5, #7]
- 103 0044 237B     		ldrb	r3, [r4, #12]
- 104 0046 2B72     		strb	r3, [r5, #8]
- 105 0048 637B     		ldrb	r3, [r4, #13]
- 106 004a 6B72     		strb	r3, [r5, #9]
- 107 004c A37B     		ldrb	r3, [r4, #14]
- 108 004e AB72     		strb	r3, [r5, #10]
- 109 0050 E37B     		ldrb	r3, [r4, #15]
- 110 0052 EB72     		strb	r3, [r5, #11]
+  95              		.loc 1 35 13 view .LVU16
+  96 003a 6B71     		strb	r3, [r5, #5]
+  97 003c A37A     		ldrb	r3, [r4, #10]
+  98 003e AB71     		strb	r3, [r5, #6]
+  99 0040 E37A     		ldrb	r3, [r4, #11]
+ 100 0042 EB71     		strb	r3, [r5, #7]
+ 101 0044 237B     		ldrb	r3, [r4, #12]
+ 102 0046 2B72     		strb	r3, [r5, #8]
+ 103 0048 637B     		ldrb	r3, [r4, #13]
+ 104 004a 6B72     		strb	r3, [r5, #9]
+ 105 004c A37B     		ldrb	r3, [r4, #14]
+ 106 004e AB72     		strb	r3, [r5, #10]
+ 107 0050 E37B     		ldrb	r3, [r4, #15]
+ 108 0052 EB72     		strb	r3, [r5, #11]
   50:shiffthq.c    **** 
- 111              		.loc 1 50 5 is_stmt 1 view .LVU19
- 112 0054 2378     		ldrb	r3, [r4]
- 113 0056 1A43     		orrs	r2, r3
- 114 0058 A378     		ldrb	r3, [r4, #2]
- 115 005a E478     		ldrb	r4, [r4, #3]
- 116              	.LVL5:
+ 109              		.loc 1 50 5 is_stmt 1 view .LVU17
+ 110 0054 6378     		ldrb	r3, [r4, #1]
+ 111 0056 E478     		ldrb	r4, [r4, #3]
+ 112              	.LVL5:
   50:shiffthq.c    **** 
- 117              		.loc 1 50 5 is_stmt 0 view .LVU20
- 118 005c 1B04     		lsls	r3, r3, #16
- 119 005e 1343     		orrs	r3, r2
- 120 0060 2406     		lsls	r4, r4, #24
- 121 0062 1C43     		orrs	r4, r3
- 122              	.LVL6:
+ 113              		.loc 1 50 5 is_stmt 0 view .LVU18
+ 114 0058 1B02     		lsls	r3, r3, #8
+ 115 005a 1943     		orrs	r1, r3
+ 116 005c 0A43     		orrs	r2, r1
+ 117 005e 2406     		lsls	r4, r4, #24
   53:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
- 123              		.loc 1 53 5 is_stmt 1 view .LVU21
+ 118              		.loc 1 53 13 view .LVU19
+ 119 0060 0B49     		ldr	r1, .L4+4
+ 120 0062 1443     		orrs	r4, r2
+ 121              	.LVL6:
   53:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
- 124              		.loc 1 53 13 is_stmt 0 view .LVU22
- 125 0064 3200     		movs	r2, r6
- 126 0066 FFF7FEFF 		bl	memcpy
- 127              	.LVL7:
- 128              		.loc 1 66 5 is_stmt 1 view .LVU23
- 129 006a 2A00     		movs	r2, r5
- 130 006c 2100     		movs	r1, r4
- 131 006e 1EAB     		add	r3, sp, #120
- 132 0070 06A8     		add	r0, sp, #24
- 133 0072 0196     		str	r6, [sp, #4]
- 134 0074 0097     		str	r7, [sp]
- 135 0076 FFF7FEFF 		bl	ChaCha20XOR
- 136              	.LVL8:
+ 122              		.loc 1 53 5 is_stmt 1 view .LVU20
+  53:shiffthq.c    ****             0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x66, 0x72,
+ 123              		.loc 1 53 13 is_stmt 0 view .LVU21
+ 124 0064 3200     		movs	r2, r6
+ 125 0066 FFF7FEFF 		bl	memcpy
+ 126              	.LVL7:
+ 127              		.loc 1 66 5 is_stmt 1 view .LVU22
+ 128 006a 2A00     		movs	r2, r5
+ 129 006c 2100     		movs	r1, r4
+ 130 006e 1EAB     		add	r3, sp, #120
+ 131 0070 06A8     		add	r0, sp, #24
+ 132 0072 0196     		str	r6, [sp, #4]
+ 133 0074 0097     		str	r7, [sp]
+ 134 0076 FFF7FEFF 		bl	ChaCha20XOR
+ 135              	.LVL8:
   67:shiffthq.c    **** 
   68:shiffthq.c    ****     // put encrypted/decrypted to simple serial
   69:shiffthq.c    ****     simpleserial_put('r', INPUT_SIZE, encrypt);
- 137              		.loc 1 69 5 view .LVU24
- 138 007a 7220     		movs	r0, #114
- 139 007c 3A00     		movs	r2, r7
- 140 007e 3100     		movs	r1, r6
- 141 0080 FFF7FEFF 		bl	simpleserial_put
- 142              	.LVL9:
+ 136              		.loc 1 69 5 view .LVU23
+ 137 007a 7220     		movs	r0, #114
+ 138 007c 3A00     		movs	r2, r7
+ 139 007e 3100     		movs	r1, r6
+ 140 0080 FFF7FEFF 		bl	simpleserial_put
+ 141              	.LVL9:
   70:shiffthq.c    ****     
   71:shiffthq.c    ****     return 0;
- 143              		.loc 1 71 5 view .LVU25
- 144              		.loc 1 71 5 is_stmt 0 view .LVU26
- 145 0084 0020     		movs	r0, #0
- 146              	.L2:
- 147              	.LBE5:
- 148              	.LBE4:
+ 142              		.loc 1 71 5 view .LVU24
+ 143              		.loc 1 71 5 is_stmt 0 view .LVU25
+ 144 0084 0020     		movs	r0, #0
+ 145              	.L2:
+ 146              	.LBE5:
+ 147              	.LBE4:
   72:shiffthq.c    **** }
- 149              		.loc 1 72 1 view .LVU27
- 150 0086 2FB0     		add	sp, sp, #188
- 151              		@ sp needed
- 152 0088 F0BD     		pop	{r4, r5, r6, r7, pc}
- 153              	.L5:
- 154 008a C046     		.align	2
- 155              	.L4:
- 156 008c 00000000 		.word	.LANCHOR0
- 157 0090 00000000 		.word	.LC2
- 158              		.cfi_endproc
- 159              	.LFE3:
- 161              		.section	.text.startup.main,"ax",%progbits
- 162              		.align	1
- 163              		.global	main
- 164              		.syntax unified
- 165              		.code	16
- 166              		.thumb_func
+ 148              		.loc 1 72 1 view .LVU26
+ 149 0086 2FB0     		add	sp, sp, #188
+ 150              		@ sp needed
+ 151 0088 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 152              	.L5:
+ 153 008a C046     		.align	2
+ 154              	.L4:
+ 155 008c 00000000 		.word	.LANCHOR0
+ 156 0090 00000000 		.word	.LC2
+ 157              		.cfi_endproc
+ 158              	.LFE3:
+ 160              		.section	.text.startup.main,"ax",%progbits
+ 161              		.align	1
+ 162              		.global	main
+ 163              		.syntax unified
+ 164              		.code	16
+ 165              		.thumb_func
+ 166              		.fpu softvfp
  168              	main:
  169              	.LFB4:
   73:shiffthq.c    **** 
@@ -266,33 +266,33 @@
  173              		@ args = 0, pretend = 0, frame = 0
  174              		@ frame_needed = 0, uses_anonymous_args = 0
   76:shiffthq.c    ****     platform_init();
- 175              		.loc 1 76 5 view .LVU29
+ 175              		.loc 1 76 5 view .LVU28
   75:shiffthq.c    ****     platform_init();
- 176              		.loc 1 75 16 is_stmt 0 view .LVU30
+ 176              		.loc 1 75 16 is_stmt 0 view .LVU29
  177 0000 10B5     		push	{r4, lr}
  178              	.LCFI2:
  179              		.cfi_def_cfa_offset 8
  180              		.cfi_offset 4, -8
  181              		.cfi_offset 14, -4
- 182              		.loc 1 76 5 view .LVU31
+ 182              		.loc 1 76 5 view .LVU30
  183 0002 FFF7FEFF 		bl	platform_init
  184              	.LVL10:
   77:shiffthq.c    ****     init_uart();
- 185              		.loc 1 77 5 is_stmt 1 view .LVU32
+ 185              		.loc 1 77 5 is_stmt 1 view .LVU31
  186 0006 FFF7FEFF 		bl	init_uart
  187              	.LVL11:
   78:shiffthq.c    ****     trigger_setup();
- 188              		.loc 1 78 5 view .LVU33
+ 188              		.loc 1 78 5 view .LVU32
  189 000a FFF7FEFF 		bl	trigger_setup
  190              	.LVL12:
   79:shiffthq.c    **** 
   80:shiffthq.c    ****     simpleserial_init();
- 191              		.loc 1 80 5 view .LVU34
+ 191              		.loc 1 80 5 view .LVU33
  192 000e FFF7FEFF 		bl	simpleserial_init
  193              	.LVL13:
   81:shiffthq.c    ****     // 12 Bytes for nonce, 4 Bytes for counter
   82:shiffthq.c    ****     simpleserial_addcmd('p', 16, set_nonce);
- 194              		.loc 1 82 5 view .LVU35
+ 194              		.loc 1 82 5 view .LVU34
  195 0012 1021     		movs	r1, #16
  196 0014 7020     		movs	r0, #112
  197 0016 034A     		ldr	r2, .L8
@@ -301,13 +301,13 @@
  200              	.L7:
   83:shiffthq.c    **** 
   84:shiffthq.c    ****     while(1)
- 201              		.loc 1 84 5 discriminator 1 view .LVU36
+ 201              		.loc 1 84 5 discriminator 1 view .LVU35
   85:shiffthq.c    ****         simpleserial_get();
- 202              		.loc 1 85 9 discriminator 1 view .LVU37
+ 202              		.loc 1 85 9 discriminator 1 view .LVU36
  203 001c FFF7FEFF 		bl	simpleserial_get
  204              	.LVL15:
   84:shiffthq.c    ****         simpleserial_get();
- 205              		.loc 1 84 10 discriminator 1 view .LVU38
+ 205              		.loc 1 84 10 discriminator 1 view .LVU37
  206 0020 FCE7     		b	.L7
  207              	.L9:
  208 0022 C046     		.align	2
@@ -330,18 +330,18 @@
  219      1E1F
  220              		.text
  221              	.Letext0:
- 222              		.file 2 "/usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h"
+ 222              		.file 2 "/usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h"
  223              		.file 3 ".././simpleserial/simpleserial.h"
  224              		.file 4 "./lib/shiffthq/src/chacha20.h"
  225              		.file 5 "<built-in>"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 shiffthq.c
-     /tmp/ccOjJcOE.s:23     .text.set_nonce:0000000000000000 $t
-     /tmp/ccOjJcOE.s:29     .text.set_nonce:0000000000000000 set_nonce
-     /tmp/ccOjJcOE.s:156    .text.set_nonce:000000000000008c $d
-     /tmp/ccOjJcOE.s:162    .text.startup.main:0000000000000000 $t
-     /tmp/ccOjJcOE.s:168    .text.startup.main:0000000000000000 main
-     /tmp/ccOjJcOE.s:210    .text.startup.main:0000000000000024 $d
+     /tmp/ccnVoqOT.s:20     .text.set_nonce:0000000000000000 $t
+     /tmp/ccnVoqOT.s:28     .text.set_nonce:0000000000000000 set_nonce
+     /tmp/ccnVoqOT.s:155    .text.set_nonce:000000000000008c $d
+     /tmp/ccnVoqOT.s:161    .text.startup.main:0000000000000000 $t
+     /tmp/ccnVoqOT.s:168    .text.startup.main:0000000000000000 main
+     /tmp/ccnVoqOT.s:210    .text.startup.main:0000000000000024 $d
 
 UNDEFINED SYMBOLS
 memcpy

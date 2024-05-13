@@ -1,4 +1,5 @@
-objdir-CWNANO/mbedtls.o: mbedtls.c lib/mbedtls/include/mbedtls/chacha20.h \
+objdir-CWLITEARM/mbedtls.o: mbedtls.c \
+ lib/mbedtls/include/mbedtls/chacha20.h \
  lib/mbedtls/include/mbedtls/private_access.h \
  lib/mbedtls/include/mbedtls/build_info.h \
  lib/mbedtls/include/mbedtls/mbedtls_config.h \

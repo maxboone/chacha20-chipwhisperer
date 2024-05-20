@@ -1,8 +1,8 @@
 # ChaCha20 Chipwhisperer
 
 - Max Boone (s2081318)
-- Sven Hepkema (s)
-- Guus Kleinlein (s)
+- Sven Hepkema (s2454556)
+- Guus Kleinlein (s3745880)
 
 ## Project
 
